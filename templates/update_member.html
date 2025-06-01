@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Update Member</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{ member.name }}" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" id="email" value="{{ member.email }}" required>
+    </div>
+    <div class="form-group">
+        <label for="contact">Contact</label>
+        <input type="text" class="form-control" name="contact" id="contact" value="{{ member.contact }}">
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Update Member</button>
+</form>
+{% endblock %}

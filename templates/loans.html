@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Loans</h2>
+<a href="/loans/add" class="btn btn-primary mb-3">Add New Loan</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Member</th>
+            <th>Book</th>
+            <th>Loan Date</th>
+            <th>Return Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan, member, book in loans %}
+        <tr>
+            <td>{{ loan.id }}</td>
+            <td>{{ member.name }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ loan.loan_date }}</td>
+            <td>{{ loan.return_date }}</td>
+            <td>
+                <form action="/loans/delete/{{ loan.id }}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
