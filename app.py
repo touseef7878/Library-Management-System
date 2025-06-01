@@ -4,11 +4,11 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-
+# Configure the SQLite database
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'database', 'library.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'different_secret_key_here'
+app.secret_key = 'different_secret_key_here' 
 
 db = SQLAlchemy(app)
 
