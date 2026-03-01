@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/books" class="btn btn-secondary mb-3">← Back to Books</a>
+    <h2>📊 Statistics for "{{ book.title }}"</h2>
+    <p class="text-muted">by {{ book.author }}</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Average Rating</h6>
+                <h3>
+                    {% if book.average_rating > 0 %}
+                        ⭐ {{ "%.1f"|format(book.average_rating) }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Total Reviews</h6>
+                <h3>{{ reviews|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Total Loans</h6>
+                <h3>{{ total_loans }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center {% if is_available %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+            <div class="card-body">
+                <h6>Availability</h6>
+                <h3>{% if is_available %}✓ Available{% else %}✗ On Loan{% endif %}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Rating Distribution</h5>
+            </div>
+            <div class="card-body">
+                {% for rating in [5, 4, 3, 2, 1] %}
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <span>{{ rating }} ⭐</span>
+                        <span>{{ rating_distribution[rating] }} reviews</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {% if reviews|length > 0 %}{{ (rating_distribution[rating] / reviews|length * 100)|int }}{% else %}0{% endif %}%">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Book Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Title:</strong> {{ book.title }}</p>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Genre:</strong> <span class="badge bg-secondary">{{ book.genre }}</span></p>
+                <p><strong>Year Published:</strong> {{ book.year_published }}</p>
+                <hr>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('book_reviews', id=book.id) }}" class="btn btn-primary">View Reviews</a>
+                    <a href="{{ url_for('update_book', id=book.id) }}" class="btn btn-warning">Edit Book</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

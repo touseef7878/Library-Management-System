@@ -2,10 +2,10 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>📋 Active Loans</h2>
+    <h2>📜 Complete Loan History</h2>
     <div>
-        <a href="/loans/history" class="btn btn-secondary">📜 View History</a>
-        <a href="/loans/add" class="btn btn-primary">+ Add New Loan</a>
+        <a href="/loans" class="btn btn-secondary">Active Loans</a>
+        <a href="/export/loans" class="btn btn-success">📥 Export CSV</a>
     </div>
 </div>
 
@@ -20,22 +20,25 @@
                 <th>Return Date</th>
                 <th>Status</th>
                 <th>Late Fee</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for loan, member, book in loans %}
-            <tr {% if loan.id in overdue_loans %}class="table-danger"{% endif %}>
+            <tr>
                 <td>{{ loan.id }}</td>
-                <td>{{ member.name }}</td>
+                <td>
+                    <a href="{{ url_for('member_activity', id=member.id) }}">{{ member.name }}</a>
+                </td>
                 <td><strong>{{ book.title }}</strong></td>
                 <td>{{ loan.loan_date }}</td>
                 <td>{{ loan.return_date }}</td>
                 <td>
-                    {% if loan.id in overdue_loans %}
+                    {% if loan.returned %}
+                        <span class="badge bg-success">Returned</span>
+                    {% elif loan.return_date and loan.return_date < now().date() %}
                         <span class="badge bg-danger">Overdue</span>
                     {% else %}
-                        <span class="badge bg-success">Active</span>
+                        <span class="badge bg-warning">Active</span>
                     {% endif %}
                 </td>
                 <td>
@@ -44,11 +47,6 @@
                     {% else %}
                         $0.00
                     {% endif %}
-                </td>
-                <td>
-                    <form action="/loans/delete/{{ loan.id }}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Mark as returned?')">Return Book</button>
-                    </form>
                 </td>
             </tr>
             {% endfor %}

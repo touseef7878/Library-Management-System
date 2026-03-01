@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/books" class="btn btn-secondary mb-3">← Back to Books</a>
+    <h2>⭐ Reviews for "{{ book.title }}"</h2>
+    <p class="text-muted">by {{ book.author }}</p>
+    {% if book.average_rating > 0 %}
+        <h4>Average Rating: ⭐ {{ "%.1f"|format(book.average_rating) }} / 5.0</h4>
+    {% else %}
+        <p class="text-muted">No reviews yet. Be the first to review!</p>
+    {% endif %}
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Add Your Review</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label for="member_id" class="form-label">Your Name</label>
+                <select class="form-control" name="member_id" id="member_id" required>
+                    <option value="">Select Member</option>
+                    {% for member in members %}
+                    <option value="{{ member.id }}">{{ member.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select class="form-control" name="rating" id="rating" required>
+                    <option value="">Select Rating</option>
+                    <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 - Good)</option>
+                    <option value="3">⭐⭐⭐ (3 - Average)</option>
+                    <option value="2">⭐⭐ (2 - Poor)</option>
+                    <option value="1">⭐ (1 - Terrible)</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Your Review</label>
+                <textarea class="form-control" name="comment" id="comment" rows="4" placeholder="Share your thoughts about this book..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+<h4>All Reviews ({{ reviews|length }})</h4>
+<div class="row">
+    {% for review in reviews %}
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">{{ review.member.name }}</h5>
+                    <span class="text-muted">{{ review.date_posted.strftime('%Y-%m-%d') }}</span>
+                </div>
+                <p class="mb-2">
+                    {% for i in range(review.rating) %}⭐{% endfor %}
+                    <strong>{{ review.rating }}/5</strong>
+                </p>
+                {% if review.comment %}
+                <p class="card-text">{{ review.comment }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

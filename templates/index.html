@@ -1,9 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to the Library Management System</h1>
-    <p class="lead">Manage books, members, and loans with ease.</p>
-    <a class="btn btn-primary btn-lg" href="/books" role="button">Get Started</a>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="jumbotron bg-white p-5 rounded shadow-sm">
+            <h1 class="display-4">📚 Welcome to BookHub</h1>
+            <p class="lead">Your complete library management solution</p>
+            <hr class="my-4">
+            <p>Manage books, members, loans, and reviews all in one place</p>
+            <a class="btn btn-primary btn-lg" href="/books" role="button">Browse Books</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">📖 Books</h5>
+                <p class="display-4">{{ total_books }}</p>
+                <a href="/books" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">👥 Members</h5>
+                <p class="display-4">{{ total_members }}</p>
+                <a href="/members" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">📋 Active Loans</h5>
+                <p class="display-4">{{ active_loans }}</p>
+                <a href="/loans" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">⭐ Reviews</h5>
+                <p class="display-4">{{ total_reviews }}</p>
+                <a href="/books" class="btn btn-sm btn-primary">Browse</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

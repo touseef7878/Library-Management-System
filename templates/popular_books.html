@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/books" class="btn btn-secondary mb-3">← Back to Books</a>
+    <h2>🔥 Popular Books</h2>
+    <p class="text-muted">Top 10 books based on reviews and ratings</p>
+</div>
+
+<div class="row">
+    {% for book, review_count, avg_rating in books_with_stats %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text text-muted">by {{ book.author }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-secondary">{{ book.genre }}</span>
+                        <span class="badge bg-info">{{ book.year_published }}</span>
+                    </div>
+                    <div>
+                        {% if avg_rating %}
+                            <span class="text-warning">⭐ {{ "%.1f"|format(avg_rating) }}</span>
+                        {% else %}
+                            <span class="text-muted">No ratings</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <small class="text-muted">📝 {{ review_count }} reviews</small>
+                    <div>
+                        <a href="{{ url_for('book_reviews', id=book.id) }}" class="btn btn-sm btn-primary">View Reviews</a>
+                        <a href="{{ url_for('book_stats', id=book.id) }}" class="btn btn-sm btn-info">Statistics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

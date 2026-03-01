@@ -1,32 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Add New Loan</h2>
-<form method="post">
-    <div class="form-group">
-        <label for="member">Member</label>
-        <select class="form-control" name="member" id="member" required>
-            {% for member in members %}
-            <option value="{{ member.id }}">{{ member.name }}</option>
-            {% endfor %}
-        </select>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>📋 Add New Loan</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="member" class="form-label">Member *</label>
+                        <select class="form-control" name="member" id="member" required>
+                            <option value="">Select Member</option>
+                            {% for member in members %}
+                            <option value="{{ member.id }}">{{ member.name }} ({{ member.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="book" class="form-label">Book *</label>
+                        <select class="form-control" name="book" id="book" required>
+                            <option value="">Select Book</option>
+                            {% for book in books %}
+                            <option value="{{ book.id }}">{{ book.title }} by {{ book.author }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if not books %}
+                        <small class="text-muted">All books are currently on loan</small>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="loan_date" class="form-label">Loan Date *</label>
+                        <input type="date" class="form-control" name="loan_date" id="loan_date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="return_date" class="form-label">Return Date *</label>
+                        <input type="date" class="form-control" name="return_date" id="return_date" required>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Add Loan</button>
+                        <a href="/loans" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="book">Book</label>
-        <select class="form-control" name="book" id="book" required>
-            {% for book in books %}
-            <option value="{{ book.id }}">{{ book.title }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="loan_date">Loan Date</label>
-        <input type="date" class="form-control" name="loan_date" id="loan_date" required>
-    </div>
-    <div class="form-group">
-        <label for="return_date">Return Date</label>
-        <input type="date" class="form-control" name="return_date" id="return_date" required>
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Add Loan</button>
-</form>
+</div>
 {% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/members" class="btn btn-secondary mb-3">← Back to Members</a>
+    <h2>👤 {{ member.name }}'s Activity</h2>
+    <p class="text-muted">{{ member.email }} | Member since: {{ member.member_since.strftime('%Y-%m-%d') if member.member_since else 'N/A' }}</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Total Loans</h6>
+                <h3>{{ total_loans }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Active Loans</h6>
+                <h3>{{ active_loans }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Total Reviews</h6>
+                <h3>{{ total_reviews }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6>Late Fees</h6>
+                <h3>${{ "%.2f"|format(total_late_fees) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>📚 Loan History</h4>
+<div class="table-responsive mb-4">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Book</th>
+                <th>Loan Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Late Fee</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan, book in loans %}
+            <tr>
+                <td><strong>{{ book.title }}</strong></td>
+                <td>{{ loan.loan_date }}</td>
+                <td>{{ loan.return_date }}</td>
+                <td>
+                    {% if loan.returned %}
+                        <span class="badge bg-success">Returned</span>
+                    {% else %}
+                        <span class="badge bg-warning">Active</span>
+                    {% endif %}
+                </td>
+                <td>${{ "%.2f"|format(loan.late_fee) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h4>⭐ Reviews Written</h4>
+<div class="row">
+    {% for review, book in reviews %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">{{ book.title }}</h6>
+                <p class="mb-2">
+                    {% for i in range(review.rating) %}⭐{% endfor %}
+                    <strong>{{ review.rating }}/5</strong>
+                </p>
+                {% if review.comment %}
+                <p class="card-text">{{ review.comment }}</p>
+                {% endif %}
+                <small class="text-muted">{{ review.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
