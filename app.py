@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import csv
 from io import StringIO
+from math import ceil
 
 app = Flask(__name__)
 # Configure the SQLite database
@@ -14,14 +15,21 @@ app.secret_key = 'different_secret_key_here'
 
 db = SQLAlchemy(app)
 
+ITEMS_PER_PAGE = 10
+
+def get_utc_now():
+    """Get current UTC datetime"""
+    return datetime.now(timezone.utc)
+
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     author = db.Column(db.String(100), nullable=False)
     genre = db.Column(db.String(50))
     year_published = db.Column(db.Integer)
-    average_rating = db.Column(db.Float, default=0.0)  # New field
-    reviews = db.relationship('Review', backref='book', lazy=True)  # New relationship
+    average_rating = db.Column(db.Float, default=0.0)
+    cover_image = db.Column(db.String(500))  # New field for book cover URL
+    reviews = db.relationship('Review', backref='book', lazy=True)
 
 class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,14 +63,41 @@ class Review(db.Model):
 @app.route('/books')
 def list_books():
     search = request.args.get('search', '')
+    genre = request.args.get('genre', '')
+    year_from = request.args.get('year_from', '')
+    year_to = request.args.get('year_to', '')
+    min_rating = request.args.get('min_rating', '')
+    available_only = request.args.get('available_only', '')
+    page = request.args.get('page', 1, type=int)
+    
+    query = Book.query
+    
     if search:
-        books = Book.query.filter(
+        query = query.filter(
             (Book.title.contains(search)) | 
             (Book.author.contains(search)) | 
             (Book.genre.contains(search))
-        ).all()
-    else:
-        books = Book.query.all()
+        )
+    
+    if genre:
+        query = query.filter_by(genre=genre)
+    
+    if year_from:
+        query = query.filter(Book.year_published >= int(year_from))
+    
+    if year_to:
+        query = query.filter(Book.year_published <= int(year_to))
+    
+    if min_rating:
+        query = query.filter(Book.average_rating >= float(min_rating))
+    
+    if available_only:
+        available_book_ids = [loan.book_id for loan in Loan.query.filter_by(returned=False).all()]
+        query = query.filter(~Book.id.in_(available_book_ids))
+    
+    total_books = query.count()
+    total_pages = ceil(total_books / ITEMS_PER_PAGE)
+    books = query.offset((page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).all()
     
     # Check availability for each book
     book_availability = {}
@@ -70,7 +105,22 @@ def list_books():
         active_loan = Loan.query.filter_by(book_id=book.id, returned=False).first()
         book_availability[book.id] = active_loan is None
     
-    return render_template('books.html', books=books, search=search, book_availability=book_availability)
+    # Get all genres for filter dropdown
+    genres = db.session.query(Book.genre).distinct().filter(Book.genre != None).all()
+    genres = [g[0] for g in genres]
+    
+    return render_template('books.html', 
+                         books=books, 
+                         search=search, 
+                         genre=genre,
+                         year_from=year_from,
+                         year_to=year_to,
+                         min_rating=min_rating,
+                         available_only=available_only,
+                         book_availability=book_availability,
+                         genres=genres,
+                         page=page,
+                         total_pages=total_pages)
 
 @app.route('/books/add', methods=['GET', 'POST'])
 def add_book():
@@ -79,8 +129,9 @@ def add_book():
         author = request.form['author']
         genre = request.form['genre']
         year_published = request.form['year_published']
+        cover_image = request.form.get('cover_image', '')
 
-        new_book = Book(title=title, author=author, genre=genre, year_published=year_published)
+        new_book = Book(title=title, author=author, genre=genre, year_published=year_published, cover_image=cover_image)
         db.session.add(new_book)
         db.session.commit()
         flash('Book added successfully!', 'success')
@@ -96,6 +147,7 @@ def update_book(id):
         book.author = request.form['author']
         book.genre = request.form['genre']
         book.year_published = request.form['year_published']
+        book.cover_image = request.form.get('cover_image', '')
 
         db.session.commit()
         flash('Book updated successfully!', 'success')
@@ -154,8 +206,36 @@ def book_reviews(id):
 
 @app.route('/members')
 def list_members():
-    members = Member.query.all()
-    return render_template('members.html', members=members)
+    search = request.args.get('search', '')
+    sort = request.args.get('sort', 'name')
+    page = request.args.get('page', 1, type=int)
+    
+    query = Member.query
+    
+    if search:
+        query = query.filter(
+            (Member.name.contains(search)) | 
+            (Member.email.contains(search))
+        )
+    
+    if sort == 'recent':
+        query = query.order_by(Member.member_since.desc())
+    elif sort == 'active':
+        # Sort by number of loans (most active first)
+        query = query.outerjoin(Loan).group_by(Member.id).order_by(db.func.count(Loan.id).desc())
+    else:
+        query = query.order_by(Member.name)
+    
+    total_members = query.count()
+    total_pages = ceil(total_members / ITEMS_PER_PAGE)
+    members = query.offset((page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).all()
+    
+    return render_template('members.html', 
+                         members=members, 
+                         search=search,
+                         sort=sort,
+                         page=page,
+                         total_pages=total_pages)
 
 @app.route('/members/add', methods=['GET', 'POST'])
 def add_member():
@@ -209,16 +289,64 @@ def delete_member(id):
 
 @app.route('/loans')
 def list_loans():
-    loans = db.session.query(Loan, Member, Book).join(Member).join(Book).filter(Loan.returned == False).all()
+    search = request.args.get('search', '')
+    status = request.args.get('status', '')
+    sort = request.args.get('sort', 'recent')
+    page = request.args.get('page', 1, type=int)
+    
+    loans_query = db.session.query(Loan, Member, Book).join(Member).join(Book).filter(Loan.returned == False)
+    
+    if search:
+        loans_query = loans_query.filter(
+            (Member.name.contains(search)) | 
+            (Book.title.contains(search))
+        )
+    
+    # Calculate overdue and due soon
     overdue_loans = []
-    for loan, member, book in loans:
-        if loan.return_date and loan.return_date < datetime.utcnow().date():
+    due_soon_loans = []
+    now = get_utc_now()
+    
+    for loan, member, book in loans_query.all():
+        if loan.return_date and loan.return_date < now.date():
             overdue_loans.append(loan.id)
-            # Calculate late fee: $1 per day
-            days_overdue = (datetime.utcnow().date() - loan.return_date).days
+            days_overdue = (now.date() - loan.return_date).days
             loan.late_fee = days_overdue * 1.0
+        elif loan.return_date and (loan.return_date - now.date()).days <= 7:
+            due_soon_loans.append(loan.id)
+    
     db.session.commit()
-    return render_template('loans.html', loans=loans, overdue_loans=overdue_loans)
+    
+    # Filter by status
+    if status == 'overdue':
+        loans_query = loans_query.filter(Loan.id.in_(overdue_loans))
+    elif status == 'active':
+        loans_query = loans_query.filter(~Loan.id.in_(overdue_loans))
+    
+    # Sort
+    if sort == 'due_soon':
+        loans_query = loans_query.order_by(Loan.return_date.asc())
+    elif sort == 'overdue':
+        loans_query = loans_query.order_by(Loan.return_date.asc())
+    else:
+        loans_query = loans_query.order_by(Loan.loan_date.desc())
+    
+    total_loans = loans_query.count()
+    total_pages = ceil(total_loans / ITEMS_PER_PAGE)
+    loans = loans_query.offset((page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).all()
+    
+    return render_template('loans.html', 
+                         loans=loans, 
+                         search=search,
+                         status=status,
+                         sort=sort,
+                         overdue_loans=overdue_loans,
+                         due_soon_loans=due_soon_loans,
+                         overdue_count=len(overdue_loans),
+                         due_soon_count=len(due_soon_loans),
+                         page=page,
+                         total_pages=total_pages,
+                         now=now)
 
 @app.route('/loans/add', methods=['GET', 'POST'])
 def add_loan():
@@ -262,12 +390,39 @@ def index():
     total_books = Book.query.count()
     total_members = Member.query.count()
     active_loans = Loan.query.filter_by(returned=False).count()
+    returned_loans = Loan.query.filter_by(returned=True).count()
     total_reviews = Review.query.count()
+    
+    # Calculate overdue loans
+    now = get_utc_now().date()
+    overdue_loans = Loan.query.filter(
+        (Loan.returned == False) & 
+        (Loan.return_date < now)
+    ).count()
+    
+    # Genre distribution
+    genre_data = {}
+    genres = db.session.query(Book.genre, db.func.count(Book.id)).group_by(Book.genre).all()
+    for genre, count in genres:
+        if genre:
+            genre_data[genre] = count
+    
+    # Recent books (last 5)
+    recent_books = Book.query.order_by(Book.id.desc()).limit(5).all()
+    
+    # Top rated books (last 5)
+    top_rated_books = Book.query.filter(Book.average_rating > 0).order_by(Book.average_rating.desc()).limit(5).all()
+    
     return render_template('index.html', 
                          total_books=total_books,
                          total_members=total_members,
                          active_loans=active_loans,
-                         total_reviews=total_reviews)
+                         returned_loans=returned_loans,
+                         total_reviews=total_reviews,
+                         overdue_loans=overdue_loans,
+                         genre_data=genre_data,
+                         recent_books=recent_books,
+                         top_rated_books=top_rated_books)
 
 # Feature 1: Export to CSV
 @app.route('/export/books')
@@ -386,16 +541,40 @@ def book_stats(id):
 # Feature 5: Loan History (All loans including returned)
 @app.route('/loans/history')
 def loan_history():
-    loans = db.session.query(Loan, Member, Book).join(Member).join(Book).order_by(Loan.loan_date.desc()).all()
-    return render_template('loan_history.html', loans=loans)
+    search = request.args.get('search', '')
+    status = request.args.get('status', '')
+    
+    loans_query = db.session.query(Loan, Member, Book).join(Member).join(Book).order_by(Loan.loan_date.desc())
+    
+    if search:
+        loans_query = loans_query.filter(
+            (Member.name.contains(search)) | 
+            (Book.title.contains(search))
+        )
+    
+    now = get_utc_now()
+    
+    if status == 'returned':
+        loans_query = loans_query.filter(Loan.returned == True)
+    elif status == 'active':
+        loans_query = loans_query.filter(Loan.returned == False)
+    elif status == 'overdue':
+        loans_query = loans_query.filter(
+            (Loan.returned == False) & 
+            (Loan.return_date < now.date())
+        )
+    
+    loans = loans_query.all()
+    
+    return render_template('loan_history.html', loans=loans, search=search, status=status, now=now)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('index.html'), 404
+    return render_template('error.html', error_code=404, error_message='Page Not Found'), 404
 
 @app.errorhandler(500)
 def internal_error(e):
-    return render_template('index.html'), 500
+    return render_template('error.html', error_code=500, error_message='Internal Server Error'), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

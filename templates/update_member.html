@@ -5,25 +5,25 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h4>✏️ Update Member</h4>
+                <h4><i class="bi bi-pencil-square"></i> Update Member</h4>
             </div>
             <div class="card-body">
                 <form method="post">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name *</label>
+                        <label for="name" class="form-label"><i class="bi bi-person"></i> Name *</label>
                         <input type="text" class="form-control" name="name" id="name" value="{{ member.name }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email *</label>
+                        <label for="email" class="form-label"><i class="bi bi-envelope"></i> Email *</label>
                         <input type="email" class="form-control" name="email" id="email" value="{{ member.email }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="contact" class="form-label">Contact</label>
-                        <input type="text" class="form-control" name="contact" id="contact" value="{{ member.contact }}">
+                        <label for="contact" class="form-label"><i class="bi bi-telephone"></i> Contact</label>
+                        <input type="tel" class="form-control" name="contact" id="contact" value="{{ member.contact }}">
                     </div>
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">Update Member</button>
-                        <a href="/members" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Update Member</button>
+                        <a href="/members" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
                     </div>
                 </form>
             </div>

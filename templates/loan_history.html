@@ -2,51 +2,105 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>📜 Complete Loan History</h2>
+    <h2><i class="bi bi-clock-history"></i> Complete Loan History</h2>
     <div>
-        <a href="/loans" class="btn btn-secondary">Active Loans</a>
-        <a href="/export/loans" class="btn btn-success">📥 Export CSV</a>
+        <a href="/loans" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Active Loans</a>
+        <a href="/export/loans" class="btn btn-success"><i class="bi bi-download"></i> Export CSV</a>
     </div>
+</div>
+
+<!-- Filter & Search -->
+<div class="search-filters">
+    <form method="get" id="historyFilterForm">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label"><i class="bi bi-search"></i> Search</label>
+                <input type="text" class="form-control" name="search" placeholder="Member or book name..." value="{{ search }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label"><i class="bi bi-filter"></i> Status</label>
+                <select class="form-select" name="status">
+                    <option value="">All Loans</option>
+                    <option value="returned" {% if status == 'returned' %}selected{% endif %}>Returned</option>
+                    <option value="active" {% if status == 'active' %}selected{% endif %}>Active</option>
+                    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Overdue</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Apply Filters</button>
+                {% if search or status %}
+                <a href="/loans/history" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Clear</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="mb-3">
+    <p class="text-muted">
+        <i class="bi bi-info-circle"></i> Total loans: {{ loans|length }}
+    </p>
 </div>
 
 <div class="table-responsive">
     <table class="table table-hover">
         <thead class="table-light">
             <tr>
-                <th>ID</th>
-                <th>Member</th>
-                <th>Book</th>
-                <th>Loan Date</th>
-                <th>Return Date</th>
-                <th>Status</th>
-                <th>Late Fee</th>
+                <th><i class="bi bi-hash"></i> ID</th>
+                <th><i class="bi bi-person"></i> Member</th>
+                <th><i class="bi bi-book"></i> Book</th>
+                <th><i class="bi bi-calendar-event"></i> Loan Date</th>
+                <th><i class="bi bi-calendar-check"></i> Return Date</th>
+                <th><i class="bi bi-info-circle"></i> Status</th>
+                <th><i class="bi bi-cash-coin"></i> Late Fee</th>
             </tr>
         </thead>
         <tbody>
             {% for loan, member, book in loans %}
             <tr>
-                <td>{{ loan.id }}</td>
+                <td><small>#{{ loan.id }}</small></td>
                 <td>
-                    <a href="{{ url_for('member_activity', id=member.id) }}">{{ member.name }}</a>
+                    <a href="{{ url_for('member_activity', id=member.id) }}" class="text-decoration-none">
+                        <strong>{{ member.name }}</strong>
+                    </a>
+                    <br>
+                    <small class="text-muted">{{ member.email }}</small>
                 </td>
-                <td><strong>{{ book.title }}</strong></td>
-                <td>{{ loan.loan_date }}</td>
-                <td>{{ loan.return_date }}</td>
+                <td>
+                    <strong>{{ book.title }}</strong>
+                    <br>
+                    <small class="text-muted">{{ book.author }}</small>
+                </td>
+                <td>
+                    <small>{{ loan.loan_date.strftime('%b %d, %Y') }}</small>
+                </td>
+                <td>
+                    <small>{{ loan.return_date.strftime('%b %d, %Y') if loan.return_date else 'N/A' }}</small>
+                </td>
                 <td>
                     {% if loan.returned %}
-                        <span class="badge bg-success">Returned</span>
-                    {% elif loan.return_date and loan.return_date < now().date() %}
-                        <span class="badge bg-danger">Overdue</span>
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Returned</span>
+                    {% elif loan.return_date and loan.return_date < now.date() %}
+                        <span class="badge bg-danger"><i class="bi bi-exclamation-circle"></i> Overdue</span>
                     {% else %}
-                        <span class="badge bg-warning">Active</span>
+                        <span class="badge bg-warning"><i class="bi bi-clock"></i> Active</span>
                     {% endif %}
                 </td>
                 <td>
                     {% if loan.late_fee > 0 %}
-                        <span class="text-danger">${{ "%.2f"|format(loan.late_fee) }}</span>
+                        <span class="badge bg-danger">${{ "%.2f"|format(loan.late_fee) }}</span>
                     {% else %}
-                        $0.00
+                        <span class="text-muted">$0.00</span>
                     {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-2">No loan history found.</p>
                 </td>
             </tr>
             {% endfor %}

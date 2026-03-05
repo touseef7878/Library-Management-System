@@ -2,96 +2,149 @@
 
 {% block content %}
 <div class="mb-4">
-    <a href="/members" class="btn btn-secondary mb-3">← Back to Members</a>
-    <h2>👤 {{ member.name }}'s Activity</h2>
-    <p class="text-muted">{{ member.email }} | Member since: {{ member.member_since.strftime('%Y-%m-%d') if member.member_since else 'N/A' }}</p>
+    <a href="/members" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Back to Members</a>
+    <h2><i class="bi bi-person-circle"></i> {{ member.name }}'s Activity</h2>
+    <p class="text-muted">
+        <i class="bi bi-envelope"></i> {{ member.email }} | 
+        <i class="bi bi-calendar-event"></i> Member since: {{ member.member_since.strftime('%b %d, %Y') if member.member_since else 'N/A' }}
+    </p>
 </div>
 
+<!-- Key Metrics -->
 <div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card text-center">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6>Total Loans</h6>
+                <div class="mb-2" style="font-size: 2rem;">📚</div>
+                <h6 class="text-muted">Total Loans</h6>
                 <h3>{{ total_loans }}</h3>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6>Active Loans</h6>
+                <div class="mb-2" style="font-size: 2rem;">📖</div>
+                <h6 class="text-muted">Active Loans</h6>
                 <h3>{{ active_loans }}</h3>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6>Total Reviews</h6>
+                <div class="mb-2" style="font-size: 2rem;">⭐</div>
+                <h6 class="text-muted">Total Reviews</h6>
                 <h3>{{ total_reviews }}</h3>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6>Late Fees</h6>
-                <h3>${{ "%.2f"|format(total_late_fees) }}</h3>
+                <div class="mb-2" style="font-size: 2rem;">💰</div>
+                <h6 class="text-muted">Late Fees</h6>
+                <h3 class="{% if total_late_fees > 0 %}text-danger{% endif %}">
+                    ${{ "%.2f"|format(total_late_fees) }}
+                </h3>
             </div>
         </div>
     </div>
 </div>
 
-<h4>📚 Loan History</h4>
-<div class="table-responsive mb-4">
-    <table class="table table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>Book</th>
-                <th>Loan Date</th>
-                <th>Return Date</th>
-                <th>Status</th>
-                <th>Late Fee</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for loan, book in loans %}
-            <tr>
-                <td><strong>{{ book.title }}</strong></td>
-                <td>{{ loan.loan_date }}</td>
-                <td>{{ loan.return_date }}</td>
-                <td>
-                    {% if loan.returned %}
-                        <span class="badge bg-success">Returned</span>
-                    {% else %}
-                        <span class="badge bg-warning">Active</span>
-                    {% endif %}
-                </td>
-                <td>${{ "%.2f"|format(loan.late_fee) }}</td>
-            </tr>
+<!-- Loan History -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5><i class="bi bi-clock-history"></i> Loan History</h5>
+    </div>
+    <div class="card-body">
+        {% if loans %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="bi bi-book"></i> Book</th>
+                        <th><i class="bi bi-calendar-event"></i> Loan Date</th>
+                        <th><i class="bi bi-calendar-check"></i> Return Date</th>
+                        <th><i class="bi bi-info-circle"></i> Status</th>
+                        <th><i class="bi bi-cash-coin"></i> Late Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan, book in loans %}
+                    <tr>
+                        <td>
+                            <strong>{{ book.title }}</strong>
+                            <br>
+                            <small class="text-muted">{{ book.author }}</small>
+                        </td>
+                        <td><small>{{ loan.loan_date.strftime('%b %d, %Y') }}</small></td>
+                        <td><small>{{ loan.return_date.strftime('%b %d, %Y') if loan.return_date else 'N/A' }}</small></td>
+                        <td>
+                            {% if loan.returned %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Returned</span>
+                            {% else %}
+                                <span class="badge bg-warning"><i class="bi bi-clock"></i> Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if loan.late_fee > 0 %}
+                                <span class="badge bg-danger">${{ "%.2f"|format(loan.late_fee) }}</span>
+                            {% else %}
+                                <span class="text-muted">$0.00</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-4">
+            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+            <p class="mt-2">No loans yet</p>
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Reviews Written -->
+<div class="card">
+    <div class="card-header">
+        <h5><i class="bi bi-chat-left-text"></i> Reviews Written ({{ reviews|length }})</h5>
+    </div>
+    <div class="card-body">
+        {% if reviews %}
+        <div class="row">
+            {% for review, book in reviews %}
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ book.title }}</h6>
+                        <p class="text-muted small mb-2">{{ book.author }}</p>
+                        <p class="mb-2">
+                            <span class="text-warning" style="font-size: 1.1rem;">
+                                {% for i in range(review.rating) %}⭐{% endfor %}
+                            </span>
+                            <strong>{{ review.rating }}/5</strong>
+                        </p>
+                        {% if review.comment %}
+                        <p class="card-text small">{{ review.comment }}</p>
+                        {% else %}
+                        <p class="card-text text-muted small"><em>No comment provided</em></p>
+                        {% endif %}
+                        <small class="text-muted">{{ review.date_posted.strftime('%b %d, %Y') }}</small>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<h4>⭐ Reviews Written</h4>
-<div class="row">
-    {% for review, book in reviews %}
-    <div class="col-md-6 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-title">{{ book.title }}</h6>
-                <p class="mb-2">
-                    {% for i in range(review.rating) %}⭐{% endfor %}
-                    <strong>{{ review.rating }}/5</strong>
-                </p>
-                {% if review.comment %}
-                <p class="card-text">{{ review.comment }}</p>
-                {% endif %}
-                <small class="text-muted">{{ review.date_posted.strftime('%Y-%m-%d') }}</small>
-            </div>
         </div>
+        {% else %}
+        <p class="text-muted text-center py-4">
+            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+            <p class="mt-2">No reviews written yet</p>
+        </p>
+        {% endif %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

@@ -4,8 +4,56 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>📋 Active Loans</h2>
     <div>
-        <a href="/loans/history" class="btn btn-secondary">📜 View History</a>
-        <a href="/loans/add" class="btn btn-primary">+ Add New Loan</a>
+        <a href="/loans/history" class="btn btn-secondary"><i class="bi bi-clock-history"></i> View History</a>
+        <a href="/loans/add" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Loan</a>
+    </div>
+</div>
+
+<!-- Filter & Search -->
+<div class="search-filters">
+    <form method="get" id="loanFilterForm">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label"><i class="bi bi-search"></i> Search</label>
+                <input type="text" class="form-control" name="search" placeholder="Member or book name..." value="{{ search }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label"><i class="bi bi-filter"></i> Status</label>
+                <select class="form-select" name="status">
+                    <option value="">All Loans</option>
+                    <option value="active" {% if status == 'active' %}selected{% endif %}>Active</option>
+                    <option value="overdue" {% if status == 'overdue' %}selected{% endif %}>Overdue</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label"><i class="bi bi-sort-down"></i> Sort By</label>
+                <select class="form-select" name="sort">
+                    <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                    <option value="due_soon" {% if sort == 'due_soon' %}selected{% endif %}>Due Soon</option>
+                    <option value="overdue" {% if sort == 'overdue' %}selected{% endif %}>Overdue First</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Apply Filters</button>
+                {% if search or status %}
+                <a href="/loans" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Clear</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Summary Stats -->
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Total Active Loans:</strong> {{ loans|length }} | 
+            <strong>Overdue:</strong> <span class="badge bg-danger">{{ overdue_count }}</span> | 
+            <strong>Due Soon (7 days):</strong> <span class="badge bg-warning">{{ due_soon_count }}</span>
+        </div>
     </div>
 </div>
 
@@ -13,46 +61,115 @@
     <table class="table table-hover">
         <thead class="table-light">
             <tr>
-                <th>ID</th>
-                <th>Member</th>
-                <th>Book</th>
-                <th>Loan Date</th>
-                <th>Return Date</th>
-                <th>Status</th>
-                <th>Late Fee</th>
-                <th>Actions</th>
+                <th><i class="bi bi-hash"></i> ID</th>
+                <th><i class="bi bi-person"></i> Member</th>
+                <th><i class="bi bi-book"></i> Book</th>
+                <th><i class="bi bi-calendar-event"></i> Loan Date</th>
+                <th><i class="bi bi-calendar-check"></i> Due Date</th>
+                <th><i class="bi bi-exclamation-triangle"></i> Status</th>
+                <th><i class="bi bi-cash-coin"></i> Late Fee</th>
+                <th><i class="bi bi-gear"></i> Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for loan, member, book in loans %}
-            <tr {% if loan.id in overdue_loans %}class="table-danger"{% endif %}>
-                <td>{{ loan.id }}</td>
-                <td>{{ member.name }}</td>
-                <td><strong>{{ book.title }}</strong></td>
-                <td>{{ loan.loan_date }}</td>
-                <td>{{ loan.return_date }}</td>
+            <tr {% if loan.id in overdue_loans %}class="table-danger"{% elif loan.id in due_soon_loans %}class="table-warning"{% endif %}>
+                <td><small>#{{ loan.id }}</small></td>
+                <td>
+                    <strong>{{ member.name }}</strong>
+                    <br>
+                    <small class="text-muted">{{ member.email }}</small>
+                </td>
+                <td>
+                    <strong>{{ book.title }}</strong>
+                    <br>
+                    <small class="text-muted">{{ book.author }}</small>
+                </td>
+                <td>
+                    <small>{{ loan.loan_date.strftime('%b %d, %Y') }}</small>
+                </td>
+                <td>
+                    <small>{{ loan.return_date.strftime('%b %d, %Y') }}</small>
+                </td>
                 <td>
                     {% if loan.id in overdue_loans %}
-                        <span class="badge bg-danger">Overdue</span>
+                        <span class="badge bg-danger">
+                            <i class="bi bi-exclamation-circle"></i> Overdue
+                        </span>
+                        <br>
+                        <small class="text-danger">{{ (now.date() - loan.return_date).days }} days late</small>
+                    {% elif loan.id in due_soon_loans %}
+                        <span class="badge bg-warning">
+                            <i class="bi bi-clock"></i> Due Soon
+                        </span>
+                        <br>
+                        <small class="text-warning">{{ (loan.return_date - now.date()).days }} days left</small>
                     {% else %}
-                        <span class="badge bg-success">Active</span>
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> Active
+                        </span>
+                        <br>
+                        <small class="text-success">{{ (loan.return_date - now.date()).days }} days left</small>
                     {% endif %}
                 </td>
                 <td>
                     {% if loan.late_fee > 0 %}
-                        <span class="text-danger">${{ "%.2f"|format(loan.late_fee) }}</span>
+                        <span class="badge bg-danger">${{ "%.2f"|format(loan.late_fee) }}</span>
                     {% else %}
-                        $0.00
+                        <span class="text-muted">$0.00</span>
                     {% endif %}
                 </td>
                 <td>
                     <form action="/loans/delete/{{ loan.id }}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Mark as returned?')">Return Book</button>
+                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Mark this book as returned?')" title="Return Book">
+                            <i class="bi bi-check-lg"></i> Return
+                        </button>
                     </form>
+                    <a href="/members/{{ member.id }}/activity" class="btn btn-info btn-sm" title="Member Activity">
+                        <i class="bi bi-person"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-2">No active loans found.</p>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<nav aria-label="Loan pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+                <i class="bi bi-chevron-left"></i> Previous
+            </a>
+        </li>
+        
+        {% for p in range(1, total_pages + 1) %}
+            {% if p == page %}
+            <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+            {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ p }}{% if search %}&search={{ search }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">{{ p }}</a>
+            </li>
+            {% elif p == page - 3 or p == page + 3 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+        
+        <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+                Next <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}
