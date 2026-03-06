@@ -1,93 +1,55 @@
-# 📚 BookHub - Library Management System
+# 📚 HiTec University Library Management System
 
-A modern, full-featured web application for managing library operations, built with Flask and SQLite. This system provides efficient management of books, members, loans, and book reviews through a clean and intuitive interface.
+A professional, full-featured library management system built for HiTec University. This system enables efficient management of books, student library cards, loans with automatic fine calculation, and provides a complete web interface for both administrators and students.
 
-## ✨ Features
+## ✨ Key Features
+
+### 🎓 Student Library Card System
+- Unique library card generation for each student
+- Card status management (Active, Suspended, Expired)
+- Student profile with department and semester information
+- Complete loan history tracking
 
 ### 📖 Book Management
-- Add, update, and delete books
-- Search books by title, author, or genre
-- Track book ratings and reviews
-- Display average ratings for each book
-- Real-time availability status (Available/On Loan)
-- Book statistics dashboard with rating distribution
-- Export books to CSV
-
-### 👥 Member Management
-- Register new library members
-- Update member information
-- Track member registration dates
-- Email validation and duplicate prevention
-- Member activity dashboard showing loan history and reviews
-- Export members to CSV
+- Comprehensive book catalog with ISBN, genre, publisher, and year
+- Book availability tracking (total copies vs available copies)
+- Book cover images and descriptions
+- Advanced search by title, author, or ISBN
+- Genre-based filtering
 
 ### 📋 Loan Management
-- Create and track book loans
-- Automatic overdue loan detection
-- Visual status indicators (Active/Overdue/Returned)
-- Prevent duplicate loans for the same book
-- Late fee calculator ($1 per day overdue)
-- Complete loan history with all transactions
-- Export loans to CSV
+- 15-day loan duration (configurable)
+- Automatic late fee calculation (PKR 50/day)
+- Real-time overdue detection
+- Loan status tracking (Active, Overdue, Returned)
+- Complete loan history with fine calculations
+- Prevent duplicate loans for same book
 
 ### ⭐ Review System
-- Members can rate books (1-5 stars)
+- Students can rate books (1-5 stars)
 - Write detailed reviews
 - Automatic average rating calculation
-- One review per member per book
 - View all reviews for each book
 
-### 🔥 New Advanced Features
+### 🗺️ Interactive Map
+- Leaflet.js integration for library location
+- Get directions to the library
+- Library contact information and hours
 
-#### 1. Export to CSV
-- Export books, members, and loans data to CSV format
-- Easy data backup and analysis
-- Accessible from each section's page
+### 🔐 Admin Panel
+- Secure login system with password hashing
+- Dashboard with key statistics
+- Books management (Add, Edit, Delete)
+- Students management (Register, Edit, View)
+- Loans management (Create, Return, Track)
+- Overdue tracking and fine management
 
-#### 2. Book Availability Status
-- Real-time availability indicator on book listings
-- Visual badges showing if book is available or on loan
-- Prevents booking unavailable books
-
-#### 3. Popular Books Page
-- Top 10 books based on reviews and ratings
-- Shows review count and average rating
-- Quick access to book reviews and statistics
-
-#### 4. Member Activity Dashboard
-- Complete member profile with statistics
-- View all loans (active and returned)
-- See all reviews written by member
-- Track total late fees
-- Quick overview of member engagement
-
-#### 5. Late Fee Calculator
-- Automatic calculation of late fees ($1/day)
-- Real-time fee display on loan listings
-- Helps track overdue penalties
-- Shows fees in member activity dashboard
-
-#### 6. Book Statistics Page
-- Detailed book analytics
-- Rating distribution chart
-- Total loan count
-- Current availability status
-- Visual progress bars for ratings
-
-#### 7. Complete Loan History
-- View all loans (active and returned)
-- Filter between active loans and complete history
-- Track book return status
-- Historical data for reporting
-
-### 🎨 Modern UI
-- Responsive Bootstrap design
-- Custom color scheme with purple theme
-- Emoji icons for better visual appeal
-- Card-based layouts for forms
-- Dashboard with statistics
-- Progress bars and visual indicators
-- Hover effects and smooth transitions
+### 🎨 Professional UI
+- Modern Bootstrap 5 design
+- Responsive layout for all devices
+- Professional color scheme (Navy Blue & Cyan)
+- Smooth animations and transitions
+- Intuitive navigation
 
 ## 🚀 Getting Started
 
@@ -97,241 +59,256 @@ A modern, full-featured web application for managing library operations, built w
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
 ```bash
 git clone <repository-url>
-cd Library-Management-System
+cd hitec-library-system
 ```
 
-2. Install required packages:
+2. **Create a virtual environment (recommended):**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Initialize the database:
-```bash
-python create_db.py
-```
-
-4. Run the application:
+4. **Run the application:**
 ```bash
 python app.py
 ```
 
-5. Open your browser and navigate to:
+5. **Access the application:**
+Open your browser and navigate to:
 ```
 http://127.0.0.1:5000
 ```
 
-## 📦 Dependencies
+## 📝 Default Admin Credentials
 
-- Flask 3.0.3 - Web framework
-- Flask-SQLAlchemy 3.1.1 - Database ORM
-- gunicorn 23.0.0 - Production server
+```
+Username: admin
+Password: admin123
+```
+
+⚠️ **Important:** Change these credentials in production!
 
 ## 🗂️ Project Structure
 
 ```
-Library-Management-System/
-├── app.py                 # Main application file with all routes
-├── create_db.py          # Database initialization
-├── requirements.txt      # Python dependencies
+hitec-library-system/
+├── app.py                          # Main Flask application
+├── requirements.txt                # Python dependencies
 ├── database/
-│   └── library.db       # SQLite database
+│   └── library.db                 # SQLite database
 ├── static/
-│   ├── css/            # Bootstrap CSS
-│   └── js/             # Bootstrap JavaScript
-└── templates/          # HTML templates
-    ├── base.html       # Base template with navigation
-    ├── index.html      # Dashboard with statistics
-    ├── books.html      # Book listing with search
-    ├── add_book.html   # Add book form
-    ├── update_book.html # Update book form
-    ├── book_reviews.html # Book reviews page
-    ├── book_stats.html  # Book statistics dashboard
-    ├── popular_books.html # Top rated books
-    ├── members.html    # Member listing
-    ├── add_member.html # Add member form
-    ├── update_member.html # Update member form
-    ├── member_activity.html # Member activity dashboard
-    ├── loans.html      # Active loan listing
-    ├── add_loan.html   # Add loan form
-    └── loan_history.html # Complete loan history
+│   ├── css/                       # Bootstrap CSS
+│   ├── js/                        # Bootstrap JavaScript
+│   └── images/
+│       └── logo.png               # HiTec University logo
+└── templates/
+    ├── base.html                  # Base template with navbar/footer
+    ├── admin/
+    │   ├── login.html             # Admin login page
+    │   ├── dashboard.html         # Admin dashboard
+    │   ├── books.html             # Books management
+    │   ├── add_book.html          # Add book form
+    │   ├── edit_book.html         # Edit book form
+    │   ├── students.html          # Students management
+    │   ├── add_student.html       # Register student form
+    │   ├── edit_student.html      # Edit student form
+    │   ├── student_detail.html    # Student profile & loans
+    │   ├── loans.html             # Loans management
+    │   └── create_loan.html       # Create loan form
+    ├── public/
+    │   ├── index.html             # Public homepage
+    │   ├── books.html             # Public book catalog
+    │   ├── book_detail.html       # Book detail page
+    │   ├── map.html               # Library location map
+    │   ├── about.html             # About library
+    │   └── contact.html           # Contact page
+    └── errors/
+        ├── 404.html               # Page not found
+        └── 500.html               # Server error
 ```
 
-## 🎯 Key Endpoints
+## 🔑 Key Endpoints
 
-### Books
-- `GET /books` - List all books with search
-- `GET /books/add` - Add new book form
-- `POST /books/add` - Create new book
-- `GET /books/update/<id>` - Update book form
-- `POST /books/update/<id>` - Update book
-- `POST /books/delete/<id>` - Delete book
-- `GET /books/<id>/reviews` - View/add reviews
-- `GET /books/<id>/stats` - Book statistics
-- `GET /books/popular` - Popular books
-- `GET /export/books` - Export books to CSV
+### Public Routes
+- `GET /` - Homepage with featured books
+- `GET /books` - Book catalog with search and filters
+- `GET /books/<id>` - Book detail page with reviews
+- `GET /library-map` - Interactive map with location
+- `GET /about` - About library page
+- `GET /contact` - Contact information
 
-### Members
-- `GET /members` - List all members
-- `GET /members/add` - Add new member form
-- `POST /members/add` - Create new member
-- `GET /members/update/<id>` - Update member form
-- `POST /members/update/<id>` - Update member
-- `POST /members/delete/<id>` - Delete member
-- `GET /members/<id>/activity` - Member activity dashboard
-- `GET /export/members` - Export members to CSV
+### Admin Routes
+- `GET /admin/login` - Admin login page
+- `GET /admin/dashboard` - Admin dashboard
+- `GET /admin/books` - Books management
+- `POST /admin/books/add` - Add new book
+- `POST /admin/books/<id>/edit` - Edit book
+- `POST /admin/books/<id>/delete` - Delete book
+- `GET /admin/students` - Students management
+- `POST /admin/students/add` - Register student
+- `POST /admin/students/<id>/edit` - Edit student
+- `GET /admin/students/<id>` - Student profile
+- `GET /admin/loans` - Loans management
+- `POST /admin/loans/create` - Create loan
+- `POST /admin/loans/<id>/return` - Return book
 
-### Loans
-- `GET /loans` - List active loans
-- `GET /loans/add` - Add new loan form
-- `POST /loans/add` - Create new loan
-- `POST /loans/delete/<id>` - Return book (mark as returned)
-- `GET /loans/history` - Complete loan history
-- `GET /export/loans` - Export loans to CSV
+## 💾 Database Schema
 
-### Dashboard
-- `GET /` - Home page with statistics
-
-## 💡 Usage
-
-### Dashboard
-The home page displays key statistics:
-- Total number of books
-- Total number of members
-- Active loans count
-- Total reviews
-
-### Managing Books
-1. Navigate to "Books" from the navigation menu
-2. Use the search bar to find specific books
-3. Click "Add New Book" to register a new book
-4. Click "Stats" to view detailed book statistics
-5. Click "Edit" to update book information
-6. Click "Reviews" to see or add reviews
-7. Click "Delete" to remove a book
-8. Click "Export CSV" to download books data
-9. Click "Popular Books" to see top-rated books
-
-### Managing Members
-1. Navigate to "Members" from the navigation menu
-2. Click "Add New Member" to register a new member
-3. Email addresses must be unique
-4. Click "Activity" to view member's complete activity
-5. Click "Edit" to update member information
-6. Click "Delete" to remove a member
-7. Click "Export CSV" to download members data
-
-### Managing Loans
-1. Navigate to "Loans" from the navigation menu (shows active loans)
-2. Click "Add New Loan" to create a new loan
-3. Select a member and an available book
-4. Set loan and return dates
-5. Overdue loans are highlighted in red with late fees
-6. Click "Return Book" to mark a loan as returned
-7. Click "View History" to see all loans (including returned)
-8. Click "Export CSV" to download loans data
-
-### Adding Reviews
-1. Go to the Books page
-2. Click "Reviews" on any book
-3. Select your name from the member list
-4. Choose a rating (1-5 stars)
-5. Write your review (optional)
-6. Submit the review
-
-### Viewing Statistics
-1. Click "Stats" on any book to see:
-   - Average rating
-   - Total reviews
-   - Total loans
-   - Availability status
-   - Rating distribution chart
-
-### Member Activity
-1. Click "Activity" on any member to see:
-   - Total loans and active loans
-   - Complete loan history
-   - All reviews written
-   - Total late fees accumulated
-
-### Popular Books
-1. Navigate to "Popular" from the navigation menu
-2. View top 10 books based on reviews and ratings
-3. Quick access to reviews and statistics
-
-## 🔒 Security Features
-
-- Email validation for members
-- Duplicate email prevention
-- Date validation for loans
-- One review per member per book
-- SQL injection protection via SQLAlchemy ORM
-- Form validation on both client and server side
-- Confirmation dialogs for destructive actions
-
-## 📊 Database Schema
+### Admin
+- id (Primary Key)
+- username (Unique)
+- password_hash
+- email (Unique)
+- created_at
 
 ### Book
 - id (Primary Key)
 - title
 - author
+- isbn (Unique)
 - genre
 - year_published
+- publisher
+- total_copies
+- available_copies
+- cover_image
+- description
 - average_rating
+- created_at
 
-### Member
+### Student
 - id (Primary Key)
 - name
 - email (Unique)
-- contact
-- member_since
+- roll_number (Unique)
+- phone
+- department
+- semester
+- library_card_number (Unique)
+- card_status (active/suspended/expired)
+- total_fines
+- registered_at
 
 ### Loan
 - id (Primary Key)
-- member_id (Foreign Key)
+- student_id (Foreign Key)
 - book_id (Foreign Key)
 - loan_date
+- due_date
 - return_date
-- returned (Boolean)
-- late_fee
+- is_returned (Boolean)
+- fine_amount
 
 ### Review
 - id (Primary Key)
 - book_id (Foreign Key)
-- member_id (Foreign Key)
+- student_id (Foreign Key)
 - rating (1-5)
 - comment
-- date_posted
+- created_at
+
+### LibrarySettings
+- id (Primary Key)
+- library_name
+- library_address
+- library_phone
+- library_email
+- opening_hours
+- latitude
+- longitude
 
 ## 🎨 Color Scheme
 
-- Primary: #6B4E71 (Purple)
-- Secondary: #8E7C93 (Light Purple)
-- Accent: #B6A6BB (Pale Purple)
-- Background: #F5F0F6 (Very Light Purple)
+- **Primary:** #001f3f (Navy Blue)
+- **Secondary:** #0074D9 (Bright Blue)
+- **Accent:** #39CCCC (Cyan)
+- **Success:** #2ECC40 (Green)
+- **Danger:** #FF4136 (Red)
+- **Warning:** #FF851B (Orange)
 
-## 📝 License
+## 🔒 Security Features
 
-This project is open source and available for educational purposes.
+- Password hashing using Werkzeug
+- SQL injection protection via SQLAlchemy ORM
+- Session-based authentication for admin
+- Form validation on both client and server
+- CSRF protection ready (add Flask-WTF for production)
+- Confirmation dialogs for destructive actions
+
+## 📊 Loan Policy
+
+- **Loan Duration:** 15 days
+- **Late Fee:** PKR 50 per day
+- **Maximum Books:** No limit (configurable)
+- **Renewal:** Available if not requested by another student
+- **Damage/Loss:** Student responsible for borrowed books
+
+## 🚀 Deployment
+
+### Using Gunicorn (Production)
+```bash
+gunicorn app:app --workers 4 --bind 0.0.0.0:8000
+```
+
+### Using Docker (Optional)
+Create a `Dockerfile`:
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
+```
+
+Build and run:
+```bash
+docker build -t hitec-library .
+docker run -p 8000:8000 hitec-library
+```
+
+## 📈 Future Enhancements
+
+- Email notifications for overdue books
+- SMS alerts for students
+- Mobile app integration
+- Advanced analytics and reporting
+- Book reservation system
+- Digital library integration
+- QR code generation for library cards
+- Integration with Supabase for cloud database
+- Payment gateway for fine collection
+- Multi-language support
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
+Contributions are welcome! Please follow these steps:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-## 👨‍💻 Development
+## 📄 License
 
-To run in development mode:
-```bash
-python app.py
-```
+This project is proprietary software for HiTec University. All rights reserved.
 
-For production deployment, use gunicorn:
-```bash
-gunicorn app:app
-```
+## 👨‍💻 Support
+
+For technical support or inquiries:
+- Email: library@hitec.edu.pk
+- Phone: +92-51-XXXX-XXXX
+- Location: HiTec University, Taxila, Pakistan
 
 ---
 
-Made with ❤️ using Flask and Bootstrap
+**Made with ❤️ for HiTec University Library**
+
+*Professional Library Management System - Empowering Academic Excellence*

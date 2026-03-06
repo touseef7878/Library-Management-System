@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-primary mb-4">
+        <i class="fas fa-envelope"></i> Contact Us
+    </h1>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">Get in Touch</h4>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-secondary mb-2">
+                            <i class="fas fa-map-pin"></i> Address
+                        </h6>
+                        <p>HiTec University<br>Taxila, Pakistan</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-secondary mb-2">
+                            <i class="fas fa-phone"></i> Phone
+                        </h6>
+                        <p><a href="tel:+92-51-XXXX-XXXX">+92-51-XXXX-XXXX</a></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-secondary mb-2">
+                            <i class="fas fa-envelope"></i> Email
+                        </h6>
+                        <p><a href="mailto:library@hitec.edu.pk">library@hitec.edu.pk</a></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-secondary mb-2">
+                            <i class="fas fa-clock"></i> Hours
+                        </h6>
+                        <p>
+                            Monday - Friday: 8:00 AM - 6:00 PM<br>
+                            Saturday: 9:00 AM - 4:00 PM<br>
+                            Sunday: Closed
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="text-primary mb-4">Quick Links</h4>
+                    
+                    <div class="list-group list-group-flush">
+                        <a href="/books" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                            <i class="fas fa-book"></i> Browse Books
+                        </a>
+                        <a href="/library-map" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                            <i class="fas fa-map"></i> Find Us on Map
+                        </a>
+                        <a href="/about" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                            <i class="fas fa-info-circle"></i> About Library
+                        </a>
+                        <a href="/admin/login" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                            <i class="fas fa-lock"></i> Admin Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="text-primary mb-3">Need Help?</h5>
+                    <p class="text-muted">
+                        For questions about borrowing books, library card status, or any other inquiries, please contact our library staff during business hours.
+                    </p>
+                    <a href="mailto:library@hitec.edu.pk" class="btn btn-primary w-100">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

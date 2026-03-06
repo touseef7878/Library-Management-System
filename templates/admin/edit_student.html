@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Student - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> Edit Student
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user"></i> Full Name *
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ student.name }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope"></i> Email *
+                                </label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ student.email }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone"></i> Phone Number
+                                </label>
+                                <input type="tel" class="form-control" id="phone" name="phone" value="{{ student.phone or '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="department" class="form-label">
+                                    <i class="fas fa-building"></i> Department
+                                </label>
+                                <input type="text" class="form-control" id="department" name="department" value="{{ student.department or '' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="semester" class="form-label">
+                                    <i class="fas fa-book"></i> Semester
+                                </label>
+                                <select class="form-select" id="semester" name="semester">
+                                    <option value="">Select Semester</option>
+                                    {% for i in range(1, 9) %}
+                                    <option value="{{ i }}" {% if student.semester == i %}selected{% endif %}>{{ i }}{{ 'st' if i == 1 else 'nd' if i == 2 else 'rd' if i == 3 else 'th' }} Semester</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="card_status" class="form-label">
+                                    <i class="fas fa-id-card"></i> Card Status *
+                                </label>
+                                <select class="form-select" id="card_status" name="card_status" required>
+                                    <option value="active" {% if student.card_status == 'active' %}selected{% endif %}>Active</option>
+                                    <option value="suspended" {% if student.card_status == 'suspended' %}selected{% endif %}>Suspended</option>
+                                    <option value="expired" {% if student.card_status == 'expired' %}selected{% endif %}>Expired</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Card Number:</strong> {{ student.library_card_number }}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Student
+                            </button>
+                            <a href="/admin/students" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

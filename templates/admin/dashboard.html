@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="text-primary mb-2">
+                <i class="fas fa-chart-line"></i> Admin Dashboard
+            </h1>
+            <p class="text-muted">Welcome back! Here's your library overview.</p>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Books</p>
+                            <h3 class="text-primary mb-0">{{ total_books }}</h3>
+                        </div>
+                        <i class="fas fa-book fa-3x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Students</p>
+                            <h3 class="text-secondary mb-0">{{ total_students }}</h3>
+                        </div>
+                        <i class="fas fa-users fa-3x text-secondary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Active Loans</p>
+                            <h3 class="text-success mb-0">{{ active_loans }}</h3>
+                        </div>
+                        <i class="fas fa-hand-holding-heart fa-3x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Overdue Loans</p>
+                            <h3 class="text-danger mb-0">{{ overdue_loans }}</h3>
+                        </div>
+                        <i class="fas fa-exclamation-circle fa-3x text-danger opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Fine Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Outstanding Fines</p>
+                            <h2 class="text-warning mb-0">PKR {{ "%.2f"|format(total_fines) }}</h2>
+                        </div>
+                        <i class="fas fa-money-bill-wave fa-3x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h4 class="text-primary mb-3">
+                <i class="fas fa-bolt"></i> Quick Actions
+            </h4>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="/admin/books/add" class="btn btn-primary w-100 py-3">
+                <i class="fas fa-plus-circle"></i> Add New Book
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="/admin/students/add" class="btn btn-secondary w-100 py-3">
+                <i class="fas fa-user-plus"></i> Register Student
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="/admin/loans/create" class="btn btn-success w-100 py-3">
+                <i class="fas fa-plus-square"></i> Create Loan
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="/admin/loans?status=overdue" class="btn btn-danger w-100 py-3">
+                <i class="fas fa-clock"></i> View Overdue
+            </a>
+        </div>
+    </div>
+    
+    <!-- Recent Loans -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> Recent Loans
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_loans %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Book</th>
+                                    <th>Loan Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in recent_loans %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ loan.student.name }}</strong><br>
+                                        <small class="text-muted">{{ loan.student.roll_number }}</small>
+                                    </td>
+                                    <td>{{ loan.book.title }}</td>
+                                    <td>{{ loan.loan_date.strftime('%d %b %Y') }}</td>
+                                    <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
+                                    <td>
+                                        {% if loan.is_returned %}
+                                            <span class="badge bg-success">Returned</span>
+                                        {% elif loan.is_overdue() %}
+                                            <span class="badge bg-danger">Overdue</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Active</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="/admin/loans" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-4">No recent loans</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Management Links -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4 class="text-primary mb-3">
+                <i class="fas fa-cog"></i> Management
+            </h4>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-2x text-primary mb-3"></i>
+                    <h5>Books Management</h5>
+                    <p class="text-muted small">Add, edit, and manage library books</p>
+                    <a href="/admin/books" class="btn btn-sm btn-primary">Manage Books</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x text-secondary mb-3"></i>
+                    <h5>Students Management</h5>
+                    <p class="text-muted small">Register and manage student accounts</p>
+                    <a href="/admin/students" class="btn btn-sm btn-secondary">Manage Students</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-exchange-alt fa-2x text-success mb-3"></i>
+                    <h5>Loans Management</h5>
+                    <p class="text-muted small">Track and manage book loans</p>
+                    <a href="/admin/loans" class="btn btn-sm btn-success">Manage Loans</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

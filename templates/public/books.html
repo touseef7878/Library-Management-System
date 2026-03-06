@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Books - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-primary mb-4">
+        <i class="fas fa-book"></i> Book Catalog
+    </h1>
+    
+    <!-- Search and Filter -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search" placeholder="Search by title or author..." value="{{ search }}">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="genre">
+                        <option value="">All Genres</option>
+                        {% for g in genres %}
+                        <option value="{{ g }}" {% if genre == g %}selected{% endif %}>{{ g }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Books Grid -->
+    {% if books.items %}
+    <div class="row">
+        {% for book in books.items %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if book.cover_image %}
+                <img src="{{ book.cover_image }}" class="card-img-top" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <i class="fas fa-book fa-5x text-white opacity-50"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text text-muted">
+                        <small>by {{ book.author }}</small>
+                    </p>
+                    
+                    {% if book.genre %}
+                    <p class="card-text">
+                        <span class="badge bg-info">{{ book.genre }}</span>
+                    </p>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            {% if book.available_copies > 0 %}
+                            <span class="badge bg-success">Available ({{ book.available_copies }})</span>
+                            {% else %}
+                            <span class="badge bg-danger">Unavailable</span>
+                            {% endif %}
+                        </div>
+                        <small class="text-warning">
+                            <i class="fas fa-star"></i> {{ "%.1f"|format(book.average_rating) }}
+                        </small>
+                    </div>
+                    
+                    {% if book.year_published %}
+                    <p class="card-text">
+                        <small class="text-muted">Published: {{ book.year_published }}</small>
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="/books/{{ book.id }}" class="btn btn-primary w-100">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if books.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if books.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search }}&genre={{ genre }}">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ books.prev_num }}&search={{ search }}&genre={{ genre }}">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in books.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == books.page %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_num }}&search={{ search }}&genre={{ genre }}">{{ page_num }}</a>
+                    </li>
+                    {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if books.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ books.next_num }}&search={{ search }}&genre={{ genre }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ books.pages }}&search={{ search }}&genre={{ genre }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    
+    {% else %}
+    <div class="alert alert-info text-center py-5">
+        <i class="fas fa-search fa-3x mb-3"></i>
+        <p>No books found matching your search criteria.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

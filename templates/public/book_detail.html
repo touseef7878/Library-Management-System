@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image }}" class="img-fluid rounded shadow" alt="{{ book.title }}">
+            {% else %}
+            <div class="bg-secondary d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
+                <i class="fas fa-book fa-5x text-white opacity-50"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1 class="text-primary mb-2">{{ book.title }}</h1>
+            <p class="lead text-muted mb-3">by {{ book.author }}</p>
+            
+            <div class="mb-4">
+                <div class="d-flex gap-3 align-items-center">
+                    {% if book.available_copies > 0 %}
+                    <span class="badge bg-success p-2">Available ({{ book.available_copies }}/{{ book.total_copies }})</span>
+                    {% else %}
+                    <span class="badge bg-danger p-2">Unavailable</span>
+                    {% endif %}
+                    
+                    <div>
+                        <i class="fas fa-star text-warning"></i>
+                        <strong>{{ "%.1f"|format(book.average_rating) }}/5.0</strong>
+                        <small class="text-muted">({{ book.reviews|length }} reviews)</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Book Information</h5>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Genre:</strong></td>
+                            <td>{{ book.genre or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Publisher:</strong></td>
+                            <td>{{ book.publisher or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Year Published:</strong></td>
+                            <td>{{ book.year_published or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ISBN:</strong></td>
+                            <td>{{ book.isbn or 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Copies:</strong></td>
+                            <td>{{ book.total_copies }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Available Copies:</strong></td>
+                            <td>{{ book.available_copies }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            {% if book.description %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p>{{ book.description }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h3 class="text-primary mb-4">
+                <i class="fas fa-comments"></i> Reviews ({{ book.reviews|length }})
+            </h3>
+            
+            {% if book.reviews %}
+            <div class="row">
+                {% for review in reviews %}
+                <div class="col-md-12 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ review.student.name }}</h6>
+                                    <small class="text-muted">{{ review.student.roll_number }}</small>
+                                </div>
+                                <div class="text-warning">
+                                    {% for i in range(review.rating) %}
+                                    <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - review.rating) %}
+                                    <i class="far fa-star"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="card-text">{{ review.comment }}</p>
+                            <small class="text-muted">{{ review.created_at.strftime('%d %b %Y') }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No reviews yet. Be the first to review this book!
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a href="/books" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Back to Books
+        </a>
+    </div>
+</div>
+{% endblock %}

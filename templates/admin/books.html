@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Books Management - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-primary">
+                <i class="fas fa-book"></i> Books Management
+            </h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/admin/books/add" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add New Book
+            </a>
+        </div>
+    </div>
+    
+    <!-- Search -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-2">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="search" placeholder="Search by title, author, or ISBN..." value="{{ search }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Books Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            {% if books.items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>ISBN</th>
+                            <th>Total</th>
+                            <th>Available</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books.items %}
+                        <tr>
+                            <td>
+                                <strong>{{ book.title[:40] }}</strong>
+                            </td>
+                            <td>{{ book.author }}</td>
+                            <td>
+                                {% if book.genre %}
+                                <span class="badge bg-info">{{ book.genre }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td><code>{{ book.isbn or '-' }}</code></td>
+                            <td>
+                                <span class="badge bg-secondary">{{ book.total_copies }}</span>
+                            </td>
+                            <td>
+                                {% if book.available_copies > 0 %}
+                                <span class="badge bg-success">{{ book.available_copies }}</span>
+                                {% else %}
+                                <span class="badge bg-danger">0</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <i class="fas fa-star text-warning"></i> {{ "%.1f"|format(book.average_rating) }}
+                            </td>
+                            <td>
+                                <a href="/admin/books/{{ book.id }}/edit" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="POST" action="/admin/books/{{ book.id }}/delete" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if books.pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if books.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&search={{ search }}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.prev_num }}&search={{ search }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in books.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num == books.page %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_num }}&search={{ search }}">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if books.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.next_num }}&search={{ search }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ books.pages }}&search={{ search }}">Last</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <div class="alert alert-info text-center py-4">
+                <i class="fas fa-search fa-2x mb-2"></i>
+                <p>No books found</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

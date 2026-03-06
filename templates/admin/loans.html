@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Loans Management - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-primary">
+                <i class="fas fa-exchange-alt"></i> Loans Management
+            </h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/admin/loans/create" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Create Loan
+            </a>
+        </div>
+    </div>
+    
+    <!-- Status Filter -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <a href="/admin/loans?status=active" class="btn {% if status == 'active' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <i class="fas fa-check-circle"></i> Active ({{ loans.total if status == 'active' else '?' }})
+                </a>
+                <a href="/admin/loans?status=overdue" class="btn {% if status == 'overdue' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                    <i class="fas fa-exclamation-circle"></i> Overdue
+                </a>
+                <a href="/admin/loans?status=returned" class="btn {% if status == 'returned' %}btn-success{% else %}btn-outline-success{% endif %}">
+                    <i class="fas fa-check"></i> Returned
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loans Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            {% if loans.items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Book</th>
+                            <th>Loan Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Fine</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in loans.items %}
+                        <tr>
+                            <td>
+                                <strong>{{ loan.student.name }}</strong><br>
+                                <small class="text-muted">{{ loan.student.roll_number }}</small>
+                            </td>
+                            <td>{{ loan.book.title[:40] }}</td>
+                            <td>{{ loan.loan_date.strftime('%d %b %Y') }}</td>
+                            <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
+                            <td>
+                                {% if loan.is_returned %}
+                                    <span class="badge bg-success">Returned</span>
+                                {% elif loan.is_overdue() %}
+                                    <span class="badge bg-danger">Overdue</span>
+                                {% else %}
+                                    <span class="badge bg-info">Active</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.fine_amount > 0 %}
+                                <span class="badge bg-warning">PKR {{ "%.2f"|format(loan.fine_amount) }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not loan.is_returned %}
+                                <form method="POST" action="/admin/loans/{{ loan.id }}/return" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark as returned?')">
+                                        <i class="fas fa-check"></i> Return
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if loans.pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if loans.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&status={{ status }}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ loans.prev_num }}&status={{ status }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in loans.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num == loans.page %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_num }}&status={{ status }}">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if loans.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ loans.next_num }}&status={{ status }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ loans.pages }}&status={{ status }}">Last</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <div class="alert alert-info text-center py-4">
+                <i class="fas fa-search fa-2x mb-2"></i>
+                <p>No loans found</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

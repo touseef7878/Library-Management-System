@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Book - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> Edit Book
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-book"></i> Book Title *
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="author" class="form-label">
+                                    <i class="fas fa-pen"></i> Author *
+                                </label>
+                                <input type="text" class="form-control" id="author" name="author" value="{{ book.author }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="isbn" class="form-label">
+                                    <i class="fas fa-barcode"></i> ISBN
+                                </label>
+                                <input type="text" class="form-control" id="isbn" name="isbn" value="{{ book.isbn or '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="genre" class="form-label">
+                                    <i class="fas fa-tag"></i> Genre
+                                </label>
+                                <input type="text" class="form-control" id="genre" name="genre" value="{{ book.genre or '' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="year_published" class="form-label">
+                                    <i class="fas fa-calendar"></i> Year Published
+                                </label>
+                                <input type="number" class="form-control" id="year_published" name="year_published" value="{{ book.year_published or '' }}" min="1900" max="2100">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="publisher" class="form-label">
+                                    <i class="fas fa-building"></i> Publisher
+                                </label>
+                                <input type="text" class="form-control" id="publisher" name="publisher" value="{{ book.publisher or '' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cover_image" class="form-label">
+                                <i class="fas fa-image"></i> Cover Image URL
+                            </label>
+                            <input type="url" class="form-control" id="cover_image" name="cover_image" value="{{ book.cover_image or '' }}" placeholder="https://example.com/image.jpg">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-align-left"></i> Description
+                            </label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ book.description or '' }}</textarea>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> Total copies and availability are managed separately.
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Book
+                            </button>
+                            <a href="/admin/books" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
