@@ -303,12 +303,12 @@ This project is proprietary software for HiTec University. All rights reserved.
 ## 👨‍💻 Support
 
 For technical support or inquiries:
-- Email: library@hitec.edu.pk
-- Phone: +92-51-XXXX-XXXX
+- Email: touseefurrehman5554@gmail.com
+- Phone: +92-3476992071
 - Location: HiTec University, Taxila, Pakistan
 
 ---
 
 **Made with ❤️ for HiTec University Library**
 
-*Professional Library Management System - Empowering Academic Excellence*
+*Library Management System - Empowering Academic Excellence*
