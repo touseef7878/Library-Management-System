@@ -457,7 +457,8 @@ def admin_return_loan(id):
 @app.route('/')
 def index():
     """Public homepage"""
-    featured_books = Book.query.limit(6).all()
+    # Get featured books with ratings, ordered by average rating
+    featured_books = Book.query.order_by(Book.average_rating.desc()).limit(6).all()
     total_books = Book.query.count()
     total_students = Student.query.count()
     
@@ -500,26 +501,27 @@ def book_detail(id):
 
 @app.route('/about')
 def about():
-    """About library page"""
-    return render_template('public/about.html')
+    """About library page with map"""
+    settings = LibrarySettings.query.first()
+    if not settings:
+        settings = LibrarySettings(
+            library_name='HiTec University Library',
+            library_address='HiTec University, Taxila, Pakistan',
+            library_phone='+92-51-9048-5000',
+            library_email='library@hitec.edu.pk',
+            opening_hours='Mon-Fri: 8:00 AM - 10:00 PM | Sat: 9:00 AM - 5:00 PM | Sun: Closed',
+            latitude=33.7261928,
+            longitude=72.8197162
+        )
+        db.session.add(settings)
+        db.session.commit()
+    
+    return render_template('public/about.html', settings=settings)
 
 @app.route('/contact')
 def contact():
     """Contact page"""
     return render_template('public/contact.html')
-
-@app.route('/library-map')
-def library_map():
-    """Library location map"""
-    settings = LibrarySettings.query.first()
-    if not settings:
-        settings = LibrarySettings(
-            library_name='HiTec University Library',
-            latitude=33.6844,
-            longitude=73.0479
-        )
-    
-    return render_template('public/map.html', settings=settings)
 
 # ==================== ERROR HANDLERS ====================
 

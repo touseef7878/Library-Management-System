@@ -70,6 +70,53 @@
             border-bottom: 2px solid var(--accent-color);
         }
         
+        /* Dropdown Menu */
+        .dropdown-menu {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+        }
+        
+        .dropdown-item {
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+            padding-left: 2rem;
+        }
+        
+        .dropdown-item.active {
+            background: rgba(57, 204, 204, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid var(--accent-color);
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -313,18 +360,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
-                            <i class="fas fa-book"></i> Books
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'library_map' %}active{% endif %}" href="/library-map">
-                            <i class="fas fa-map-location-dot"></i> Map
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="/about">
                             <i class="fas fa-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
+                            <i class="fas fa-book"></i> Books
                         </a>
                     </li>
                     <li class="nav-item">
@@ -332,24 +374,34 @@
                             <i class="fas fa-envelope"></i> Contact
                         </a>
                     </li>
-                    {% if session.get('admin_id') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/dashboard">
-                            <i class="fas fa-lock"></i> Admin
-                        </a>
+                    
+                    <!-- Admin Dropdown -->
+                    <li class="nav-item dropdown">
+                        <button class="admin-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cog"></i> Admin
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if session.get('admin_id') %}
+                            <li>
+                                <a class="dropdown-item" href="/admin/dashboard">
+                                    <i class="fas fa-lock"></i> Dashboard
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a class="dropdown-item" href="/admin/login">
+                                    <i class="fas fa-sign-in-alt"></i> Admin Login
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/logout">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/login">
-                            <i class="fas fa-lock"></i> Admin Login
-                        </a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
         </div>
