@@ -4,308 +4,446 @@
 
 {% block extra_css %}
 <style>
+    /* Hero Section - Clean Academic Design */
     .hero-section {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        min-height: 500px;
+        background: linear-gradient(rgba(0, 31, 63, 0.7), rgba(0, 31, 63, 0.7)), 
+                    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23001f3f" width="1200" height="600"/><path fill="%230074D9" opacity="0.1" d="M0 300 Q300 200 600 300 T1200 300 L1200 600 L0 600 Z"/></svg>');
+        background-size: cover;
+        background-position: center;
+        min-height: 450px;
         display: flex;
         align-items: center;
         color: white;
-        position: relative;
-        overflow: hidden;
+        padding: 3rem 0;
     }
-    
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 300px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        transform: translate(100px, -100px);
+
+    .hero-content h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.2;
     }
-    
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-        transform: translate(-50px, 50px);
+
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
     }
-    
-    .hero-content {
-        position: relative;
-        z-index: 1;
+
+    /* Search Bar - Most Important Element */
+    .search-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-top: 2rem;
     }
-    
-    .stat-card {
+
+    .search-container .form-control {
+        padding: 1rem;
+        font-size: 1.1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+    }
+
+    .search-container .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 116, 217, 0.25);
+    }
+
+    .search-btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Quick Access Cards */
+    .quick-access-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
         transition: all 0.3s ease;
-        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
-    
-    .stat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+
+    .quick-access-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
-    
+
+    .quick-access-card i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+    }
+
+    .quick-access-card h5 {
+        font-weight: 600;
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .quick-access-card p {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 0;
+    }
+
+    /* Announcements Section */
+    .announcements-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+        border-left: 4px solid var(--secondary-color);
+    }
+
+    .announcement-item {
+        padding: 1rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .announcement-item:last-child {
+        border-bottom: none;
+    }
+
+    .announcement-item strong {
+        color: var(--primary-color);
+    }
+
+    /* New Books Section */
+    .new-books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .book-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .book-card-image {
+        width: 100%;
+        height: 250px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+
+    .book-card-body {
+        padding: 1.5rem;
+    }
+
+    .book-card-title {
+        font-weight: 600;
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .book-card-author {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    /* Statistics Section */
+    .stats-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 3rem 0;
+        border-radius: 12px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 2rem;
+    }
+
     .stat-number {
         font-size: 2.5rem;
         font-weight: 700;
-        line-height: 1;
+        margin-bottom: 0.5rem;
     }
-    
-    .featured-book {
-        transition: all 0.3s ease;
-        border-radius: 12px;
-        overflow: hidden;
+
+    .stat-label {
+        font-size: 1rem;
+        opacity: 0.9;
     }
-    
-    .featured-book:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
-    }
-    
-    .feature-item {
+
+    /* Library Info Section */
+    .library-info-section {
+        background: white;
         padding: 2rem;
         border-radius: 12px;
-        background: white;
-        transition: all 0.3s ease;
-        border-left: 4px solid var(--secondary-color);
+        border: 1px solid #e0e0e0;
     }
-    
-    .feature-item:hover {
-        transform: translateX(10px);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+    .info-item {
+        margin-bottom: 1.5rem;
     }
-    
-    .cta-section {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        padding: 4rem 0;
-        color: white;
-        border-radius: 15px;
-        margin: 3rem 0;
+
+    .info-item:last-child {
+        margin-bottom: 0;
     }
-    
+
+    .info-item h6 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-item p {
+        color: #666;
+        margin: 0;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+        }
+
         .hero-section {
-            min-height: 400px;
+            min-height: 350px;
             padding: 2rem 0;
         }
-        
+
+        .new-books-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
         .stat-number {
             font-size: 2rem;
         }
-        
-        .hero-section::before,
-        .hero-section::after {
-            display: none;
-        }
+    }
+
+    /* Section Spacing */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+        color: #666;
+        margin-bottom: 2rem;
+        font-size: 1rem;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+
+<!-- 1. HERO SECTION WITH SEARCH -->
 <div class="hero-section">
     <div class="container">
-        <div class="row align-items-center hero-content">
-            <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
-                <h1 class="display-4 fw-bold mb-3">
-                    <i class="fas fa-book-open"></i> Welcome to HiTec University Library
-                </h1>
-                <p class="lead mb-4">
-                    Your gateway to knowledge and academic excellence. Access thousands of books, journals, and resources to support your learning journey.
-                </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="/books" class="btn btn-light btn-lg">
-                        <i class="fas fa-search"></i> Browse Books
-                    </a>
-                    <a href="/library-map" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-map"></i> Find Us
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="280" height="280" style="max-width: 100%; animation: float 3s ease-in-out infinite;">
-                    <circle cx="100" cy="100" r="95" fill="white" stroke="#001f3f" stroke-width="3"/>
-                    <circle cx="100" cy="100" r="85" fill="#39CCCC" opacity="0.1"/>
-                    <g transform="translate(100, 100)">
-                        <path d="M -30 -25 L -10 -25 L -10 25 L -30 25 Z" fill="#0074D9" opacity="0.8"/>
-                        <path d="M 10 -25 L 30 -25 L 30 25 L 10 25 Z" fill="#39CCCC"/>
-                        <rect x="-10" y="-25" width="20" height="50" fill="#001f3f"/>
-                        <line x1="-25" y1="-15" x2="-15" y2="-15" stroke="white" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="-25" y1="-8" x2="-15" y2="-8" stroke="white" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="-25" y1="-1" x2="-15" y2="-1" stroke="white" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="-25" y1="6" x2="-15" y2="6" stroke="white" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="15" y1="-15" x2="25" y2="-15" stroke="#001f3f" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="15" y1="-8" x2="25" y2="-8" stroke="#001f3f" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="15" y1="-1" x2="25" y2="-1" stroke="#001f3f" stroke-width="1.5" opacity="0.6"/>
-                        <line x1="15" y1="6" x2="25" y2="6" stroke="#001f3f" stroke-width="1.5" opacity="0.6"/>
-                    </g>
-                    <text x="100" y="170" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#001f3f">
-                        HiTec Library
-                    </text>
-                </svg>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Statistics Section -->
-<div class="container py-5">
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4 mb-3">
-            <div class="card stat-card border-0 shadow-sm h-100">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-book fa-3x text-primary mb-3"></i>
-                    <h3 class="stat-number text-primary">{{ total_books }}</h3>
-                    <p class="text-muted mb-0">Books Available</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4 mb-3">
-            <div class="card stat-card border-0 shadow-sm h-100">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-users fa-3x text-secondary mb-3"></i>
-                    <h3 class="stat-number text-secondary">{{ total_students }}</h3>
-                    <p class="text-muted mb-0">Active Students</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4 mb-3">
-            <div class="card stat-card border-0 shadow-sm h-100">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
-                    <h3 class="stat-number text-warning">24/7</h3>
-                    <p class="text-muted mb-0">Online Access</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Featured Books Section -->
-<div class="bg-light py-5">
-    <div class="container">
-        <div class="mb-5">
-            <h2 class="text-primary mb-2">
-                <i class="fas fa-star"></i> Featured Books
-            </h2>
-            <p class="text-muted">Discover our latest additions and most popular titles</p>
-        </div>
-        
-        {% if featured_books %}
-        <div class="row g-4">
-            {% for book in featured_books %}
-            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="card featured-book border-0 shadow-sm h-100">
-                    {% if book.cover_image %}
-                    <img src="{{ book.cover_image }}" class="card-img-top" alt="{{ book.title }}" style="height: 280px; object-fit: cover;">
-                    {% else %}
-                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 280px;">
-                        <i class="fas fa-book fa-4x text-white opacity-50"></i>
-                    </div>
-                    {% endif %}
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title fw-bold">{{ book.title[:35] }}{% if book.title|length > 35 %}...{% endif %}</h6>
-                        <p class="card-text small text-muted mb-2">{{ book.author[:25] }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto mb-3">
-                            <span class="badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %}">
-                                {% if book.available_copies > 0 %}
-                                    Available
-                                {% else %}
-                                    Unavailable
-                                {% endif %}
-                            </span>
-                            <small class="text-warning">
-                                <i class="fas fa-star"></i> {{ "%.1f"|format(book.average_rating) }}
-                            </small>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1>HiTec University Library</h1>
+                <p>Explore knowledge, research, and innovation</p>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <form method="GET" action="/books" class="row g-2">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="search" placeholder="Search books, journals, resources...">
                         </div>
-                    </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="/books/{{ book.id }}" class="btn btn-sm btn-primary w-100">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary search-btn w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        <div class="text-center mt-5">
-            <a href="/books" class="btn btn-primary btn-lg">
-                <i class="fas fa-arrow-right"></i> View All Books
-            </a>
-        </div>
-        {% else %}
-        <div class="alert alert-info text-center py-5">
-            <i class="fas fa-info-circle fa-2x mb-3"></i>
-            <p>No books available yet. Check back soon!</p>
-        </div>
-        {% endif %}
     </div>
 </div>
 
-<!-- Features Section -->
+<!-- 2. QUICK ACCESS CARDS -->
 <div class="container py-5">
-    <div class="mb-5 text-center">
-        <h2 class="text-primary mb-2">
-            <i class="fas fa-lightbulb"></i> Why Choose Our Library?
-        </h2>
-        <p class="text-muted">Comprehensive services designed for your academic success</p>
-    </div>
-    
     <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-item">
-                <i class="fas fa-search fa-2x text-primary mb-3"></i>
-                <h5>Easy Book Search</h5>
-                <p class="text-muted small">Find books by title, author, genre, or ISBN with our advanced search system.</p>
+        <div class="col-md-6 col-lg-4">
+            <div class="quick-access-card">
+                <i class="fas fa-book"></i>
+                <h5>Book Catalog</h5>
+                <p>Browse our collection of books and resources</p>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-item">
-                <i class="fas fa-id-card fa-2x text-secondary mb-3"></i>
-                <h5>Library Card System</h5>
-                <p class="text-muted small">Get your unique library card and borrow books for up to 15 days.</p>
+        <div class="col-md-6 col-lg-4">
+            <div class="quick-access-card">
+                <i class="fas fa-database"></i>
+                <h5>Digital Library</h5>
+                <p>Access online journals and databases</p>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-item">
-                <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
-                <h5>Transparent Fines</h5>
-                <p class="text-muted small">Clear late fee structure (PKR 50/day) to encourage timely returns.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="feature-item">
-                <i class="fas fa-star fa-2x text-warning mb-3"></i>
-                <h5>Book Reviews</h5>
-                <p class="text-muted small">Read and write reviews to help other students find the best books.</p>
+        <div class="col-md-6 col-lg-4">
+            <div class="quick-access-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h5>Research Resources</h5>
+                <p>Find research papers and academic materials</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- CTA Section -->
-<div class="container">
-    <div class="cta-section text-center">
-        <h2 class="mb-3">Ready to Explore?</h2>
-        <p class="lead mb-4">Start your learning journey with HiTec University Library today!</p>
-        <a href="/books" class="btn btn-light btn-lg">
-            <i class="fas fa-arrow-right"></i> Browse Our Collection
+<!-- 3. ANNOUNCEMENTS SECTION -->
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 class="section-title">
+                <i class="fas fa-bullhorn"></i> Library Announcements
+            </h3>
+            <div class="announcements-section">
+                <div class="announcement-item">
+                    <strong>📚 New Books Added</strong>
+                    <p class="text-muted small mb-0">Spring semester collection now available with 200+ new titles</p>
+                </div>
+                <div class="announcement-item">
+                    <strong>⏰ Extended Hours</strong>
+                    <p class="text-muted small mb-0">Library hours extended during exam period (8 AM - 11 PM)</p>
+                </div>
+                <div class="announcement-item">
+                    <strong>🎓 Research Workshop</strong>
+                    <p class="text-muted small mb-0">Free workshop on academic research writing - Friday 3 PM</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h3 class="section-title">
+                <i class="fas fa-clock"></i> Library Hours
+            </h3>
+            <div class="library-info-section">
+                <div class="info-item">
+                    <h6>Monday - Friday</h6>
+                    <p>8:00 AM - 10:00 PM</p>
+                </div>
+                <div class="info-item">
+                    <h6>Saturday</h6>
+                    <p>9:00 AM - 5:00 PM</p>
+                </div>
+                <div class="info-item">
+                    <h6>Sunday</h6>
+                    <p>Closed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. NEW ARRIVALS SECTION -->
+<div class="container py-5">
+    <h3 class="section-title">
+        <i class="fas fa-star"></i> New Arrivals
+    </h3>
+    <p class="section-subtitle">Recently added to our collection</p>
+    
+    {% if featured_books %}
+    <div class="new-books-grid">
+        {% for book in featured_books %}
+        <div class="book-card">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image }}" class="book-card-image" alt="{{ book.title }}" style="object-fit: cover;">
+            {% else %}
+            <div class="book-card-image">
+                <i class="fas fa-book"></i>
+            </div>
+            {% endif %}
+            <div class="book-card-body">
+                <div class="book-card-title">{{ book.title[:30] }}</div>
+                <div class="book-card-author">{{ book.author[:25] }}</div>
+                <a href="/books/{{ book.id }}" class="btn btn-sm btn-outline-primary w-100">
+                    View Details
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="/books" class="btn btn-primary btn-lg">
+            <i class="fas fa-arrow-right"></i> View All Books
         </a>
     </div>
+    {% endif %}
 </div>
 
-<style>
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-    }
-</style>
+<!-- 5. STATISTICS SECTION -->
+<div class="container py-5">
+    <div class="stats-section">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_books }}+</div>
+                    <div class="stat-label">Books & Resources</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_students }}+</div>
+                    <div class="stat-label">Active Members</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Online Access</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. LIBRARY INFORMATION SECTION -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h3 class="section-title">
+                <i class="fas fa-info-circle"></i> About Our Library
+            </h3>
+            <p>HiTec University Library is committed to providing comprehensive information resources and services to support academic excellence and research. We offer a welcoming environment for study, collaboration, and innovation.</p>
+            <a href="/about" class="btn btn-outline-primary">Learn More</a>
+        </div>
+        <div class="col-lg-6">
+            <h3 class="section-title">
+                <i class="fas fa-map-location-dot"></i> Location & Contact
+            </h3>
+            <div class="library-info-section">
+                <div class="info-item">
+                    <h6>Address</h6>
+                    <p>HiTec University, Taxila, Pakistan</p>
+                </div>
+                <div class="info-item">
+                    <h6>Phone</h6>
+                    <p>+92-51-XXXX-XXXX</p>
+                </div>
+                <div class="info-item">
+                    <h6>Email</h6>
+                    <p>library@hitec.edu.pk</p>
+                </div>
+            </div>
+            <a href="/library-map" class="btn btn-outline-primary mt-3">View on Map</a>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
