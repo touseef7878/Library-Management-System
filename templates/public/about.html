@@ -473,7 +473,7 @@
                 </div>
                 
                 <div class="get-directions-btn">
-                    <a href="https://www.google.com/maps/place/HITEC+University+Library/@{{ settings.latitude }},{{ settings.longitude }},17z" 
+                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ settings.latitude }},{{ settings.longitude }}" 
                        target="_blank" class="btn btn-primary btn-sm w-100">
                         <i class="fas fa-directions"></i> Get Directions
                     </a>
@@ -506,19 +506,22 @@
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-    // Initialize map with correct coordinates
-    const map = L.map('map').setView([{{ settings.latitude }}, {{ settings.longitude }}], 16);
+    // Initialize map with correct HITEC University Library coordinates
+    const lat = {{ settings.latitude }};
+    const lng = {{ settings.longitude }};
+    const map = L.map('map').setView([lat, lng], 17);
     
-    // Add tile layer
+    // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 10
     }).addTo(map);
     
-    // Create custom marker icon
+    // Create custom marker icon (blue marker)
     const libraryIcon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
@@ -526,25 +529,63 @@
     });
     
     // Add marker with popup
-    const marker = L.marker([{{ settings.latitude }}, {{ settings.longitude }}], { icon: libraryIcon })
+    const marker = L.marker([lat, lng], { icon: libraryIcon })
         .addTo(map)
         .bindPopup(`
-            <div style="font-family: Arial, sans-serif;">
-                <strong style="color: #001f3f; font-size: 1.1rem;">{{ settings.library_name }}</strong><br>
-                <small style="color: #666;">
-                    <i class="fas fa-map-pin"></i> {{ settings.library_address }}<br>
-                    <i class="fas fa-phone"></i> <a href="tel:{{ settings.library_phone }}">{{ settings.library_phone }}</a><br>
-                    <i class="fas fa-envelope"></i> <a href="mailto:{{ settings.library_email }}">{{ settings.library_email }}</a>
-                </small>
+            <div style="font-family: 'Poppins', Arial, sans-serif; min-width: 200px;">
+                <strong style="color: #001f3f; font-size: 1.1rem; display: block; margin-bottom: 8px;">
+                    <i class="fas fa-book"></i> {{ settings.library_name }}
+                </strong>
+                <div style="color: #666; font-size: 0.9rem; line-height: 1.6;">
+                    <div style="margin-bottom: 5px;">
+                        <i class="fas fa-map-marker-alt" style="color: #0074D9; width: 16px;"></i> 
+                        {{ settings.library_address }}
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <i class="fas fa-phone" style="color: #0074D9; width: 16px;"></i> 
+                        <a href="tel:{{ settings.library_phone }}" style="color: #0074D9; text-decoration: none;">
+                            {{ settings.library_phone }}
+                        </a>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <i class="fas fa-envelope" style="color: #0074D9; width: 16px;"></i> 
+                        <a href="mailto:{{ settings.library_email }}" style="color: #0074D9; text-decoration: none;">
+                            {{ settings.library_email }}
+                        </a>
+                    </div>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ settings.latitude }},{{ settings.longitude }}" 
+                       target="_blank" 
+                       style="display: inline-block; background: linear-gradient(135deg, #001f3f, #0074D9); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; margin-top: 5px;">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
             </div>
         `, {
-            maxWidth: 300
+            maxWidth: 300,
+            className: 'custom-popup'
         })
         .openPopup();
     
-    // Add click event to marker
+    // Add click event to marker for mobile users
     marker.on('click', function() {
-        window.open('https://www.google.com/maps/place/HITEC+University+Library/@{{ settings.latitude }},{{ settings.longitude }},17z', '_blank');
+        this.openPopup();
     });
+    
+    // Add custom CSS for popup
+    const style = document.createElement('style');
+    style.textContent = `
+        .custom-popup .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 5px;
+        }
+        .custom-popup .leaflet-popup-content {
+            margin: 12px;
+        }
+        .custom-popup .leaflet-popup-tip {
+            background: white;
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 {% endblock %}

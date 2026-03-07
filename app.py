@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import json
 
 app = Flask(__name__)
@@ -21,8 +21,8 @@ LOAN_DURATION_DAYS = 15
 LATE_FEE_PER_DAY = 50  # PKR per day
 
 def get_utc_now():
-    """Get current UTC datetime"""
-    return datetime.now(timezone.utc)
+    """Get current UTC datetime (naive)"""
+    return datetime.utcnow()
 
 # ==================== DATABASE MODELS ====================
 
@@ -505,13 +505,13 @@ def about():
     settings = LibrarySettings.query.first()
     if not settings:
         settings = LibrarySettings(
-            library_name='HiTec University Library',
-            library_address='HiTec University, Taxila, Pakistan',
+            library_name='HITEC University Library',
+            library_address='HITEC University, Taxila, Pakistan',
             library_phone='+92-51-9048-5000',
             library_email='library@hitec.edu.pk',
             opening_hours='Mon-Fri: 8:00 AM - 10:00 PM | Sat: 9:00 AM - 5:00 PM | Sun: Closed',
-            latitude=33.7261928,
-            longitude=72.8197162
+            latitude=33.7265,
+            longitude=72.8194
         )
         db.session.add(settings)
         db.session.commit()
@@ -551,17 +551,18 @@ def init_db():
     # Create library settings if not exists
     if not LibrarySettings.query.first():
         settings = LibrarySettings(
-            library_name='HiTec University Library',
-            library_address='HiTec University, Taxila, Pakistan',
-            library_phone='+92-51-XXXX-XXXX',
+            library_name='HITEC University Library',
+            library_address='HITEC University, Taxila, Pakistan',
+            library_phone='+92-51-9048-5000',
             library_email='library@hitec.edu.pk',
-            opening_hours='8:00 AM - 6:00 PM',
-            latitude=33.6844,
-            longitude=73.0479
+            opening_hours='Mon-Fri: 8:00 AM - 10:00 PM | Sat: 9:00 AM - 5:00 PM | Sun: Closed',
+            latitude=33.7265,
+            longitude=72.8194
         )
         db.session.add(settings)
         db.session.commit()
         print("✓ Library settings created")
+
 
 if __name__ == '__main__':
     with app.app_context():

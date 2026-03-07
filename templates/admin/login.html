@@ -2,6 +2,105 @@
 
 {% block title %}Admin Login - HiTec University Library{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 1rem;
+        }
+        
+        .col-md-5 {
+            max-width: 100%;
+        }
+        
+        .card-body {
+            padding: 2rem !important;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .mt-5 {
+            margin-top: 2rem !important;
+        }
+        
+        .card {
+            border-radius: 8px;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .text-center i {
+            font-size: 2rem !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .text-center p {
+            font-size: 0.85rem;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+        
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+        }
+        
+        .alert {
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
+        
+        .alert strong {
+            font-size: 0.85rem;
+        }
+        
+        .alert code {
+            font-size: 0.8rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem !important;
+        }
+        
+        .my-4 {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">

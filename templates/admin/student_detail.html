@@ -2,6 +2,147 @@
 
 {% block title %}{{ student.name }} - HiTec University Library{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 1rem;
+        }
+        
+        h4 {
+            font-size: 1.1rem;
+        }
+        
+        h5 {
+            font-size: 1rem;
+        }
+        
+        h6 {
+            font-size: 0.9rem;
+        }
+        
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .table {
+            font-size: 0.85rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.5rem;
+        }
+        
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .py-5 {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+        
+        .mb-4 {
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .mb-3 {
+            margin-bottom: 0.5rem !important;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .card {
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .card-header {
+            padding: 0.75rem 1rem;
+        }
+        
+        .card-header h4, .card-header h5 {
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        h6 {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .card-body p {
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .h5 {
+            font-size: 1rem !important;
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+        }
+        
+        .badge.p-2 {
+            padding: 0.4rem 0.6rem !important;
+        }
+        
+        code {
+            font-size: 0.8rem;
+        }
+        
+        .table {
+            font-size: 0.7rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.4rem 0.2rem;
+        }
+        
+        .text-center.py-4 {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+        
+        .row {
+            margin-right: -0.5rem;
+            margin-left: -0.5rem;
+        }
+        
+        .col-md-6, .col-md-4, .col-md-8 {
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row mb-4">

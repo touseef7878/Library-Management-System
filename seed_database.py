@@ -8,7 +8,7 @@ Cleans the database and populates it with fresh data:
 """
 
 from app import app, db, Admin, Student, Book, Review
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import random
 import string
 
@@ -305,7 +305,7 @@ with app.app_context():
                     student_id=student.id,
                     rating=random.randint(3, 5),
                     comment=random.choice(REVIEW_COMMENTS),
-                    created_at=datetime.now(timezone.utc) - timedelta(days=random.randint(1, 365))
+                    created_at=datetime.utcnow() - timedelta(days=random.randint(1, 365))
                 )
                 db.session.add(review)
                 reviews_added += 1
