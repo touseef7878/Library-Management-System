@@ -2,6 +2,18 @@
 
 A full-featured library management system for HiTec University, enabling efficient management of books, student library cards, loans with automatic fine calculation, and a complete web interface for administrators and students.
 
+## 🌐 Live Demo
+
+**[https://library-management-system-vq17.onrender.com](https://library-management-system-vq17.onrender.com)**
+
+**Admin Login:**
+- Username: `admin`
+- Password: `admin123`
+
+> **Note:** App is monitored 24/7 via UptimeRobot for instant access. First load may take 30 seconds if the service was recently deployed.
+
+---
+
 ## Features
 
 - **Student Management:** 300 students with unique library cards (LIB-XXXXXX) and roll numbers (YY-DEPT-NNN format)
@@ -17,7 +29,6 @@ A full-featured library management system for HiTec University, enabling efficie
 ### Prerequisites
 - Python 3.7+
 - pip
-
 ### Installation
 
 ```bash
