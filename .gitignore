@@ -51,6 +51,10 @@ env/
 database/library.db
 database/*.db
 database/library_backup*.db
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
 
 # Logs
 *.log
@@ -68,11 +72,13 @@ logs/
 .DS_Store
 Thumbs.db
 .directory
+*.Zone.Identifier
 
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
+test_*.py
 
 # Docker
 .dockerignore
@@ -83,9 +89,18 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
+# Flask
+instance/
+.webassets-cache
+
 # Misc
 .cache/
 .mypy_cache/
 .dmypy.json
 dmypy.json
 *.pyo
+
+# Project specific
+update_coordinates.py
+test_functionality.py
+test_fine_system.py
