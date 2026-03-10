@@ -517,17 +517,16 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <h1>HiTec University Library</h1>
-                <p>Explore knowledge, research, and innovation</p>
                 
                 <!-- Search Bar -->
                 <div class="search-container">
                     <form method="GET" action="/books" class="row g-2">
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="search" placeholder="Search books, journals, resources...">
+                            <input type="text" class="form-control" name="search" placeholder="Search books...">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary search-btn w-100">
-                                <i class="fas fa-search"></i> Search
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </form>
@@ -537,83 +536,11 @@
     </div>
 </div>
 
-<!-- 2. QUICK ACCESS CARDS -->
-<div class="container py-5">
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-            <div class="quick-access-card">
-                <i class="fas fa-book"></i>
-                <h5>Book Catalog</h5>
-                <p>Browse our collection of books and resources</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <div class="quick-access-card">
-                <i class="fas fa-database"></i>
-                <h5>Digital Library</h5>
-                <p>Access online journals and databases</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <div class="quick-access-card">
-                <i class="fas fa-graduation-cap"></i>
-                <h5>Research Resources</h5>
-                <p>Find research papers and academic materials</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 3. ANNOUNCEMENTS SECTION -->
-<div class="container py-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <h3 class="section-title">
-                <i class="fas fa-bullhorn"></i> Library Announcements
-            </h3>
-            <div class="announcements-section">
-                <div class="announcement-item">
-                    <strong>📚 New Books Added</strong>
-                    <p class="text-muted small mb-0">Spring semester collection now available with 200+ new titles</p>
-                </div>
-                <div class="announcement-item">
-                    <strong>⏰ Extended Hours</strong>
-                    <p class="text-muted small mb-0">Library hours extended during exam period (8 AM - 11 PM)</p>
-                </div>
-                <div class="announcement-item">
-                    <strong>🎓 Research Workshop</strong>
-                    <p class="text-muted small mb-0">Free workshop on academic research writing - Friday 3 PM</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <h3 class="section-title">
-                <i class="fas fa-clock"></i> Library Hours
-            </h3>
-            <div class="library-info-section">
-                <div class="info-item">
-                    <h6>Monday - Friday</h6>
-                    <p>8:00 AM - 10:00 PM</p>
-                </div>
-                <div class="info-item">
-                    <h6>Saturday</h6>
-                    <p>9:00 AM - 5:00 PM</p>
-                </div>
-                <div class="info-item">
-                    <h6>Sunday</h6>
-                    <p>Closed</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 4. NEW ARRIVALS SECTION -->
+<!-- 2. NEW ARRIVALS SECTION -->
 <div class="container py-5">
     <h3 class="section-title">
         <i class="fas fa-star"></i> New Arrivals
     </h3>
-    <p class="section-subtitle">Recently added to our collection</p>
     
     {% if featured_books %}
     <div class="new-books-grid">
@@ -644,20 +571,20 @@
     {% endif %}
 </div>
 
-<!-- 5. STATISTICS SECTION -->
+<!-- 3. STATISTICS SECTION -->
 <div class="container py-5">
     <div class="stats-section">
         <div class="row">
             <div class="col-md-4">
                 <div class="stat-item">
                     <div class="stat-number">{{ total_books }}+</div>
-                    <div class="stat-label">Books & Resources</div>
+                    <div class="stat-label">Books</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stat-item">
                     <div class="stat-number">{{ total_students }}+</div>
-                    <div class="stat-label">Active Members</div>
+                    <div class="stat-label">Members</div>
                 </div>
             </div>
             <div class="col-md-4">
@@ -666,39 +593,6 @@
                     <div class="stat-label">Online Access</div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- 6. LIBRARY INFORMATION SECTION -->
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-6">
-            <h3 class="section-title">
-                <i class="fas fa-info-circle"></i> About Our Library
-            </h3>
-            <p>HiTec University Library is committed to providing comprehensive information resources and services to support academic excellence and research. We offer a welcoming environment for study, collaboration, and innovation.</p>
-            <a href="/about" class="btn btn-outline-primary">Learn More</a>
-        </div>
-        <div class="col-lg-6">
-            <h3 class="section-title">
-                <i class="fas fa-map-location-dot"></i> Location & Contact
-            </h3>
-            <div class="library-info-section">
-                <div class="info-item">
-                    <h6>Address</h6>
-                    <p>HiTec University, Taxila, Pakistan</p>
-                </div>
-                <div class="info-item">
-                    <h6>Phone</h6>
-                    <p>+92-51-XXXX-XXXX</p>
-                </div>
-                <div class="info-item">
-                    <h6>Email</h6>
-                    <p>library@hitec.edu.pk</p>
-                </div>
-            </div>
-            <a href="/about" class="btn btn-outline-primary mt-3">View on Map</a>
         </div>
     </div>
 </div>

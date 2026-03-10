@@ -546,7 +546,6 @@ def init_db():
         admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
-        print("✓ Default admin created: username=admin, password=admin123")
     
     # Create library settings if not exists
     if not LibrarySettings.query.first():
@@ -561,7 +560,6 @@ def init_db():
         )
         db.session.add(settings)
         db.session.commit()
-        print("✓ Library settings created")
 
 
 if __name__ == '__main__':
