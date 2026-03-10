@@ -3,7 +3,7 @@ Reset and Seed Database Script
 Cleans the database and populates it with fresh data:
 - 1 Admin account
 - 300 Students with proper roll numbers (YY-DEPT-NNN)
-- 1000 Books with real titles and cover images
+- 50 Real books from Open Library API with readable links
 - Reviews from students
 """
 
@@ -11,6 +11,8 @@ from app import app, db, Admin, Student, Book, Review
 from datetime import datetime, timedelta
 import random
 import string
+import requests
+import time
 
 # Department codes
 DEPARTMENTS = {
@@ -26,7 +28,7 @@ DEPARTMENTS = {
     'Business Administration': 'BA'
 }
 
-# Real book titles by genre (50 per genre = 500 total, will be duplicated to reach 1000)
+# Real book titles by genre (50 per genre = 50 total)
 BOOK_TITLES = {
     'Computer Science': [
         'The Art of Computer Programming', 'Introduction to Algorithms', 'Design Patterns', 'Clean Code', 'Code Complete',
@@ -52,18 +54,6 @@ BOOK_TITLES = {
         'Calculus of Variations', 'Mathematical Physics', 'Quantum Mechanics Mathematics', 'General Relativity Mathematics', 'Tensor Analysis',
         'Vector Calculus', 'Multivariable Calculus', 'Advanced Calculus', 'Mathematical Modeling', 'Computational Mathematics'
     ],
-    'History': [
-        'Sapiens', 'Homo Deus', 'The Story of Civilization', 'A Brief History of Time', 'The Rise and Fall of the Third Reich',
-        'The Cold War', 'World War II History', 'The American Civil War', 'The French Revolution', 'The Russian Revolution',
-        'The Ottoman Empire', 'The British Empire', 'The Roman Empire', 'Ancient Egypt', 'Medieval History',
-        'Renaissance History', 'Age of Enlightenment', 'Industrial Revolution', 'The Great Depression', 'The Vietnam War',
-        'The Korean War', 'Islamic History', 'History of Science', 'History of Technology', 'History of Medicine',
-        'History of Art', 'History of Music', 'History of Literature', 'History of Philosophy', 'History of Religion',
-        'History of Economics', 'History of Politics', 'History of Law', 'History of Education', 'History of Sports',
-        'History of Food', 'History of Fashion', 'History of Architecture', 'History of Transportation', 'History of Communication',
-        'History of Exploration', 'History of Trade', 'History of Warfare', 'History of Diplomacy', 'Ancient Greece',
-        'Ancient Rome', 'Byzantine Empire', 'Medieval Europe', 'Colonial America', 'Modern Europe'
-    ],
     'Physics': [
         'A Brief History of Time', 'The Universe in a Nutshell', 'Cosmos', 'Astrophysics for People in a Hurry', 'The Elegant Universe',
         'Parallel Worlds', 'The Fabric of the Cosmos', 'Something Deeply Hidden', 'Quantum Mechanics: The Theoretical Minimum', 'Classical Mechanics',
@@ -75,18 +65,6 @@ BOOK_TITLES = {
         'Superconductivity', 'Superfluidity', 'Quantum Computing', 'Quantum Information', 'Quantum Entanglement',
         'Statistical Mechanics', 'Kinetic Theory', 'Molecular Physics', 'Atomic Physics', 'Laser Physics',
         'Photonics', 'Semiconductor Physics', 'Nanophysics', 'Biophysics', 'Medical Physics'
-    ],
-    'Economics': [
-        'The Wealth of Nations', 'Capital', 'The General Theory of Employment', 'Capitalism and Socialism', 'The Road to Serfdom',
-        'Free to Choose', 'Freakonomics', 'Thinking, Fast and Slow', 'Misbehaving', 'Predictably Irrational',
-        'The Black Swan', 'Antifragile', 'Capital in the Twenty-First Century', 'The Second Machine Age', 'Rise of the Robots',
-        'The Lean Startup', 'Good to Great', 'Built to Last', 'The Innovators Dilemma', 'Crossing the Chasm',
-        'The Tipping Point', 'Outliers', 'David and Goliath', 'Blink', 'What the Dog Saw',
-        'Talking to Strangers', 'The Undercover Economist', 'Superfreakonomics', 'Think Like a Freak', 'Naked Economics',
-        'Economics Rules', 'The Meritocracy Trap', 'Bowling Alone', 'Strangers in Their Own Land', 'Deaths of Despair',
-        'The New Geography of Jobs', 'The Rise and Fall of American Growth', 'The Great Risk Shift', 'The Precariat', 'Bullshit Jobs',
-        'The Utopia of Rules', 'Debt: The First 5000 Years', 'The Price of Inequality', 'The Great Transformation', 'Development Economics',
-        'International Economics', 'Monetary Economics', 'Public Finance', 'Labor Economics', 'Environmental Economics'
     ],
     'Engineering': [
         'Engineering Mechanics', 'Strength of Materials', 'Theory of Structures', 'Structural Analysis', 'Reinforced Concrete Design',
@@ -100,53 +78,17 @@ BOOK_TITLES = {
         'Manufacturing Engineering', 'Production Management', 'Quality Engineering', 'Industrial Safety', 'Project Management',
         'Engineering Economics', 'Engineering Ethics', 'Sustainable Engineering', 'Green Engineering', 'Innovation Engineering'
     ],
-    'Electrical Engineering': [
-        'Electrical Engineering Fundamentals', 'Circuit Theory', 'Network Analysis', 'Electromagnetic Theory', 'Electromagnetics',
-        'Antenna Theory', 'Microwave Engineering', 'RF Circuit Design', 'Digital Electronics', 'Analog Electronics',
-        'Power Electronics', 'Semiconductor Devices', 'Integrated Circuits', 'VLSI Design', 'Digital Signal Processing',
-        'Signal Processing', 'Communication Systems', 'Digital Communications', 'Wireless Communications', 'Optical Communications',
-        'Fiber Optics', 'Photonics', 'Laser Engineering', 'Optoelectronics', 'Power Systems',
-        'Power Generation', 'Power Transmission', 'Power Distribution', 'Electrical Machines', 'DC Machines',
-        'AC Machines', 'Transformers', 'Induction Motors', 'Synchronous Machines', 'Control Systems',
-        'Automatic Control', 'Process Control', 'Industrial Automation', 'Robotics Control', 'Power Quality',
-        'Harmonic Analysis', 'Transient Analysis', 'Fault Analysis', 'Protection Systems', 'Switchgear',
-        'Electrical Safety', 'High Voltage Engineering', 'Electric Drives', 'Renewable Energy Systems', 'Smart Grids'
-    ],
-    'Mechanical Engineering': [
-        'Engineering Mechanics', 'Statics and Dynamics', 'Mechanics of Materials', 'Strength of Materials', 'Thermodynamics',
-        'Heat Transfer', 'Fluid Mechanics', 'Hydraulics and Pneumatics', 'Machine Design', 'Mechanical Design',
-        'Design of Machine Elements', 'Bearings and Lubrication', 'Gears and Gear Trains', 'Belts and Chains', 'Clutches and Brakes',
-        'Vibration Analysis', 'Mechanical Vibrations', 'Dynamics of Machinery', 'Kinematics of Machinery', 'Mechanisms',
-        'Manufacturing Processes', 'Metal Cutting', 'Machining', 'Casting', 'Welding',
-        'Forging', 'Sheet Metal Work', 'Powder Metallurgy', 'Composite Materials', 'Materials Science',
-        'Material Properties', 'Metallurgy', 'Non-Destructive Testing', 'Quality Control', 'Metrology',
-        'Precision Engineering', 'CAD/CAM', 'CNC Machining', 'Robotics', 'Automation',
-        'Industrial Engineering', 'Production Planning', 'Inventory Management', 'Supply Chain Management', 'Lean Manufacturing',
-        'Six Sigma', 'Total Quality Management', 'Maintenance Engineering', 'Reliability Engineering', 'Tribology'
-    ],
-    'Civil Engineering': [
-        'Structural Analysis', 'Structural Design', 'Reinforced Concrete Design', 'Steel Structures', 'Foundation Engineering',
-        'Soil Mechanics', 'Geotechnical Engineering', 'Rock Mechanics', 'Tunneling', 'Underground Construction',
-        'Dams and Reservoirs', 'Water Resources Engineering', 'Hydraulics', 'Hydrology', 'Flood Management',
-        'Irrigation Engineering', 'Drainage Engineering', 'Water Supply Engineering', 'Wastewater Treatment', 'Environmental Engineering',
-        'Air Pollution Control', 'Noise Control', 'Solid Waste Management', 'Hazardous Waste Management', 'Transportation Engineering',
-        'Highway Engineering', 'Railway Engineering', 'Airport Engineering', 'Port Engineering', 'Bridge Engineering',
-        'Tunnel Engineering', 'Pavement Design', 'Traffic Engineering', 'Urban Planning', 'City Planning',
-        'Sustainable Development', 'Green Building', 'Building Information Modeling', 'Construction Management', 'Project Management',
-        'Quantity Surveying', 'Estimation and Costing', 'Contracts and Specifications', 'Building Codes', 'Earthquake Engineering',
-        'Wind Engineering', 'Coastal Engineering', 'River Engineering', 'Surveying', 'Remote Sensing'
-    ],
-    'Software Engineering': [
-        'Software Engineering Principles', 'Software Design', 'Software Architecture', 'Design Patterns', 'Refactoring',
-        'Code Quality', 'Testing and Debugging', 'Unit Testing', 'Integration Testing', 'System Testing',
-        'Performance Testing', 'Security Testing', 'Test Automation', 'Continuous Integration', 'Continuous Delivery',
-        'DevOps', 'Agile Development', 'Scrum', 'Kanban', 'Lean Software Development',
-        'Extreme Programming', 'Requirements Engineering', 'Software Specification', 'Use Cases', 'User Stories',
-        'Software Modeling', 'UML', 'Domain-Driven Design', 'Microservices Architecture', 'Monolithic Architecture',
-        'Service-Oriented Architecture', 'Event-Driven Architecture', 'API Design', 'REST APIs', 'GraphQL',
-        'Web Services', 'Cloud Computing', 'Containerization', 'Docker', 'Kubernetes',
-        'Serverless Computing', 'Database Design', 'SQL', 'NoSQL', 'Data Warehousing',
-        'Big Data', 'Software Maintenance', 'Legacy Systems', 'Software Evolution', 'Software Metrics'
+    'History': [
+        'Sapiens', 'Homo Deus', 'The Story of Civilization', 'A Brief History of Time', 'The Rise and Fall of the Third Reich',
+        'The Cold War', 'World War II History', 'The American Civil War', 'The French Revolution', 'The Russian Revolution',
+        'The Ottoman Empire', 'The British Empire', 'The Roman Empire', 'Ancient Egypt', 'Medieval History',
+        'Renaissance History', 'Age of Enlightenment', 'Industrial Revolution', 'The Great Depression', 'The Vietnam War',
+        'The Korean War', 'Islamic History', 'History of Science', 'History of Technology', 'History of Medicine',
+        'History of Art', 'History of Music', 'History of Literature', 'History of Philosophy', 'History of Religion',
+        'History of Economics', 'History of Politics', 'History of Law', 'History of Education', 'History of Sports',
+        'History of Food', 'History of Fashion', 'History of Architecture', 'History of Transportation', 'History of Communication',
+        'History of Exploration', 'History of Trade', 'History of Warfare', 'History of Diplomacy', 'Ancient Greece',
+        'Ancient Rome', 'Byzantine Empire', 'Medieval Europe', 'Colonial America', 'Modern Europe'
     ]
 }
 
@@ -154,28 +96,53 @@ BOOK_TITLES = {
 AUTHORS = {
     'Computer Science': ['Donald Knuth', 'Thomas Cormen', 'Robert Martin', 'Steve McConnell', 'Martin Fowler'],
     'Mathematics': ['Carl Gauss', 'Leonhard Euler', 'Isaac Newton', 'Euclid', 'David Hilbert'],
-    'History': ['Yuval Harari', 'Will Durant', 'Barbara Tuchman', 'Eric Hobsbawm', 'Christopher Clark'],
     'Physics': ['Albert Einstein', 'Stephen Hawking', 'Richard Feynman', 'Carl Sagan', 'Brian Greene'],
-    'Economics': ['Adam Smith', 'John Keynes', 'Milton Friedman', 'Thomas Piketty', 'Paul Krugman'],
     'Engineering': ['Gustave Eiffel', 'Nikola Tesla', 'George Stephenson', 'Thomas Edison', 'Henry Ford'],
-    'Electrical Engineering': ['James Maxwell', 'Michael Faraday', 'Georg Ohm', 'Alessandro Volta', 'Oliver Heaviside'],
-    'Mechanical Engineering': ['James Watt', 'Rudolf Diesel', 'Charles Babbage', 'Joseph Bramah', 'John Smeaton'],
-    'Civil Engineering': ['Gustave Eiffel', 'Isambard Brunel', 'John Roebling', 'Joseph Bazalgette', 'Thomas Telford'],
-    'Software Engineering': ['Fred Brooks', 'Barry Boehm', 'Grady Booch', 'Kent Beck', 'Martin Fowler']
+    'History': ['Yuval Harari', 'Will Durant', 'Barbara Tuchman', 'Eric Hobsbawm', 'Christopher Clark']
 }
 
 PUBLISHERS = ['Addison-Wesley', 'O\'Reilly', 'Pearson', 'MIT Press', 'Springer', 'Cambridge', 'Oxford', 'Dover', 'Princeton', 'Penguin', 'McGraw-Hill', 'Elsevier', 'Wiley', 'IEEE Press']
 
+# Cover images with WebP format - using reliable Unsplash URLs
 COVER_IMAGES = [
-    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1516979187457-635ffe35ff15?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1509228627152-72ae67a42c27?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1516979187457-635ffe35ff15?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1509228627152-72ae67a42c27?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=300&h=400&fit=crop&fm=webp&q=80',
+    'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=400&fit=crop&fm=webp&q=80',
 ]
+
+# Genre-specific covers for better visual representation
+GENRE_COVERS = {
+    'Computer Science': [
+        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1516979187457-635ffe35ff15?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop&fm=webp&q=80',
+    ],
+    'Mathematics': [
+        'https://images.unsplash.com/photo-1509228627152-72ae67a42c27?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=300&h=400&fit=crop&fm=webp&q=80',
+    ],
+    'Physics': [
+        'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=400&fit=crop&fm=webp&q=80',
+    ],
+    'Engineering': [
+        'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1509228627152-72ae67a42c27?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=400&fit=crop&fm=webp&q=80',
+    ],
+    'History': [
+        'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=400&fit=crop&fm=webp&q=80',
+        'https://images.unsplash.com/photo-1495446815901-a7297e3ffe02?w=300&h=400&fit=crop&fm=webp&q=80',
+    ]
+}
 
 REVIEW_COMMENTS = [
     'Excellent book, highly recommended!', 'Very informative and well-written.', 'Great resource for learning.',
@@ -198,8 +165,74 @@ def generate_roll_number(dept_code, batch_year, used_rolls):
             used_rolls.add(new_roll)
             return new_roll
 
-def generate_library_card():
-    return f"LIB{random.randint(100000, 999999)}"
+def generate_library_card(used_cards):
+    while True:
+        card_num = random.randint(100000, 999999)
+        card = f"LIB{card_num}"
+        if card not in used_cards:
+            used_cards.add(card)
+            return card
+
+def fetch_books_from_openlibrary(genre, count=10):
+    """Fetch real books from Open Library API"""
+    books = []
+    subjects = {
+        'Computer Science': ['computer science', 'programming', 'algorithms'],
+        'Mathematics': ['mathematics', 'algebra', 'calculus'],
+        'Physics': ['physics', 'quantum mechanics', 'relativity'],
+        'Engineering': ['engineering', 'mechanical engineering', 'electrical engineering'],
+        'History': ['history', 'world history', 'modern history']
+    }
+    
+    subject_list = subjects.get(genre, ['books'])
+    
+    for subject in subject_list:
+        if len(books) >= count:
+            break
+            
+        try:
+            url = f"https://openlibrary.org/search.json?q={subject}&limit=50"
+            response = requests.get(url, timeout=5)
+            
+            if response.status_code == 200:
+                data = response.json()
+                docs = data.get('docs', [])
+                
+                for doc in docs:
+                    if len(books) >= count:
+                        break
+                    
+                    # Check for required fields
+                    if 'title' not in doc or 'author_name' not in doc or 'cover_i' not in doc:
+                        continue
+                    
+                    title = doc.get('title', '')[:200]
+                    authors = doc.get('author_name', [])
+                    author = authors[0] if authors else 'Unknown'
+                    author = author[:150]
+                    
+                    cover_id = doc.get('cover_i')
+                    # Use Open Library cover API - they serve WebP by default for modern browsers
+                    cover_image = f"https://covers.openlibrary.org/b/id/{cover_id}-M.jpg"
+                    
+                    year = doc.get('first_publish_year', random.randint(2000, 2024))
+                    
+                    # Get ISBN if available
+                    isbn = doc.get('isbn', [generate_isbn()])[0] if doc.get('isbn') else generate_isbn()
+                    
+                    books.append({
+                        'title': title,
+                        'author': author,
+                        'isbn': isbn,
+                        'year': year,
+                        'cover': cover_image,
+                        'publisher': 'Open Library'
+                    })
+                    
+        except Exception as e:
+            continue
+    
+    return books[:count]
 
 print("=" * 60)
 print("DATABASE RESET AND SEED")
@@ -233,6 +266,7 @@ with app.app_context():
                      'Siddiqui', 'Mirza', 'Baig', 'Qureshi', 'Shaikh', 'Rizvi', 'Naqvi', 'Haider', 'Raza', 'Farooq']
         
         used_rolls = set()
+        used_cards = set()
         for i in range(300):
             name = f"{random.choice(first_names)} {random.choice(last_names)}"
             department = random.choice(list(DEPARTMENTS.keys()))
@@ -246,7 +280,7 @@ with app.app_context():
                 phone=f"+92-{random.randint(300, 345)}-{random.randint(1000000, 9999999)}",
                 department=department,
                 semester=random.randint(1, 8),
-                library_card_number=generate_library_card(),
+                library_card_number=generate_library_card(used_cards),
                 card_status='active'
             )
             db.session.add(student)
@@ -258,36 +292,66 @@ with app.app_context():
         db.session.commit()
         print("   ✓ 300 students created")
         
-        # Seed Books
-        print("\n5. Creating 1000 books...")
+        # Seed Books - Fetch real books from Open Library API
+        print("\n5. Creating 50 real books from Open Library API...")
         book_count = 0
-        for genre, titles in BOOK_TITLES.items():
-            for i in range(100):  # 100 books per genre
-                title = titles[i % len(titles)]
-                author = random.choice(AUTHORS[genre])
+        used_isbns = set()
+        
+        # Get 10 books from each genre
+        genres_to_seed = ['Computer Science', 'Mathematics', 'Physics', 'Engineering', 'History']
+        
+        for genre in genres_to_seed:
+            print(f"   Fetching books for {genre}...")
+            genre_books = fetch_books_from_openlibrary(genre, count=10)
+            
+            # If not enough books from API, use local titles as fallback
+            if len(genre_books) < 10:
+                local_titles = BOOK_TITLES.get(genre, [])[:10 - len(genre_books)]
+                for title in local_titles:
+                    author = random.choice(AUTHORS.get(genre, ['Unknown Author']))
+                    genre_books.append({
+                        'title': title,
+                        'author': author,
+                        'isbn': generate_isbn(),
+                        'year': random.randint(2000, 2024),
+                        'cover': random.choice(GENRE_COVERS.get(genre, COVER_IMAGES)),
+                        'publisher': random.choice(PUBLISHERS)
+                    })
+            
+            for book_data in genre_books:
+                if book_count >= 50:
+                    break
+                
+                # Ensure unique ISBN
+                if book_data['isbn'] in used_isbns:
+                    book_data['isbn'] = generate_isbn()
+                used_isbns.add(book_data['isbn'])
                 
                 book = Book(
-                    title=title,
-                    author=author,
-                    isbn=generate_isbn(),
+                    title=book_data['title'],
+                    author=book_data['author'],
+                    isbn=book_data['isbn'],
                     genre=genre,
-                    year_published=random.randint(2000, 2024),
-                    publisher=random.choice(PUBLISHERS),
-                    total_copies=random.randint(2, 10),
-                    available_copies=random.randint(1, 10),
-                    cover_image=random.choice(COVER_IMAGES),
-                    description=f"A comprehensive guide to {genre}. This book covers essential concepts and practical applications.",
+                    year_published=book_data['year'],
+                    publisher=book_data['publisher'],
+                    total_copies=random.randint(2, 5),
+                    available_copies=random.randint(1, 5),
+                    cover_image=book_data['cover'],
+                    description=f"A comprehensive guide to {genre.lower()}. Published in {book_data['year']}.",
                     average_rating=0.0
                 )
                 db.session.add(book)
                 book_count += 1
                 
-                if book_count % 100 == 0:
+                if book_count % 10 == 0:
                     db.session.commit()
-                    print(f"   Added {book_count}/1000 books")
+                    print(f"   Added {book_count}/50 books")
+            
+            if book_count >= 50:
+                break
         
         db.session.commit()
-        print("   ✓ 1000 books created")
+        print(f"   ✓ {book_count} real books created")
         
         # Seed Reviews
         print("\n6. Creating reviews...")

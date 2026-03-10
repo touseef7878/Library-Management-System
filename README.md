@@ -2,33 +2,21 @@
 
 A full-featured library management system for HiTec University, enabling efficient management of books, student library cards, loans with automatic fine calculation, and a complete web interface for administrators and students.
 
-## 🌐 Live Demo
-
-**[https://library-management-system-vq17.onrender.com](https://library-management-system-vq17.onrender.com)**
-
-**Admin Login:**
-- Username: `admin`
-- Password: `admin123`
-
-> **Note:** App is monitored 24/7 via UptimeRobot for instant access. First load may take 30 seconds if the service was recently deployed.
-
----
-
 ## Features
 
-- **Student Management:** 300 students with unique library cards (LIB-XXXXXX) and roll numbers (YY-DEPT-NNN format)
-- **Book Catalog:** 1000 real book titles across 10 genres with cover images, ISBN tracking, and availability management
-- **Loan System:** 15-day loan duration with automatic late fee calculation (PKR 50/day) and overdue tracking
+- **Student Management:** 300 students with unique library cards and roll numbers
+- **Book Catalog:** 50 real books fetched from Open Library API with WebP cover images
+- **Loan System:** 15-day loan duration with automatic late fee calculation (PKR 50/day)
 - **Review System:** Student ratings and reviews with automatic average calculation
-- **Admin Panel:** Secure dashboard for managing books, students, loans, and fines
-- **Interactive Map:** Leaflet.js integration showing library location with directions
-- **Responsive Design:** Mobile-optimized Bootstrap 5 interface with professional Navy Blue & Cyan theme
+- **Admin Panel:** Secure dashboard for managing books, students, and loans
+- **Responsive Design:** Mobile-optimized Bootstrap 5 interface
 
 ## Quick Start
 
 ### Prerequisites
 - Python 3.7+
 - pip
+
 ### Installation
 
 ```bash
@@ -43,7 +31,7 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Seed database (creates admin, 300 students, 1000 books, 1000+ reviews)
+# Seed database
 python seed_database.py
 
 # Run application
@@ -56,8 +44,6 @@ Access at `http://127.0.0.1:5000`
 - Username: `admin`
 - Password: `admin123`
 
-⚠️ Change credentials in production!
-
 ## Project Structure
 
 ```
@@ -69,18 +55,18 @@ Library-Management-System/
 │   └── library.db           # SQLite database
 ├── static/                  # CSS, JS, images
 └── templates/
-    ├── admin/              # Admin panel (11 templates)
-    ├── public/             # Public pages (5 templates)
-    └── errors/             # Error pages (2 templates)
+    ├── admin/              # Admin panel templates
+    ├── public/             # Public pages
+    └── errors/             # Error pages
 ```
 
 ## API Endpoints
 
 ### Public Routes
-- `/` - Homepage with featured books
-- `/about` - Library information with map
+- `/` - Homepage
+- `/about` - Library information
 - `/books` - Book catalog with search
-- `/books/<id>` - Book details and reviews
+- `/books/<id>` - Book details
 - `/contact` - Contact information
 
 ### Admin Routes
@@ -88,30 +74,19 @@ Library-Management-System/
 - `/admin/dashboard` - Statistics overview
 - `/admin/books` - Manage books
 - `/admin/students` - Manage students
-- `/admin/loans` - Manage loans and fines
+- `/admin/loans` - Manage loans
 
 ## Database Schema
 
-- **Admin:** Authentication and user management
+- **Admin:** Authentication
 - **Book:** Title, author, ISBN, genre, copies, ratings
-- **Student:** Name, roll number, library card, department, fines
-- **Loan:** Student-book relationship, dates, fines, return status
-- **Review:** Student ratings and comments for books
-- **LibrarySettings:** Location, contact info, operating hours
+- **Student:** Name, roll number, library card, department
+- **Loan:** Student-book relationship, dates, fines
+- **Review:** Student ratings and comments
+- **LibrarySettings:** Location, contact info
 
-## Technical Details
+## Loan Policy
 
-### Book Genres (100 books each)
-Computer Science, Mathematics, History, Physics, Economics, Engineering, Electrical Engineering, Mechanical Engineering, Civil Engineering, Software Engineering
-
-### Security
-- Password hashing (Werkzeug)
-- SQL injection protection (SQLAlchemy ORM)
-- Session-based authentication
-- Form validation
-- Secure admin routes
-
-### Loan Policy
 - Duration: 15 days
 - Late fee: PKR 50/day
 - Automatic fine calculation
@@ -124,31 +99,12 @@ Computer Science, Mathematics, History, Physics, Economics, Engineering, Electri
 gunicorn app:app --workers 4 --bind 0.0.0.0:8000
 ```
 
-### Docker (Optional)
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
-```
-
-```bash
-docker build -t hitec-library .
-docker run -p 8000:8000 hitec-library
-```
-
 ## Support
 
-- Email: touseefurrehman5554@gmail.com
-- Phone: +92-3476992071
+- Email: library@hitec.edu.pk
+- Phone: +92-51-9048-5000
 - Location: HiTec University, Taxila, Pakistan
 
 ## License
 
 Proprietary software for HiTec University. All rights reserved.
-
----
-
-Made with ❤️ for HiTec University Library
