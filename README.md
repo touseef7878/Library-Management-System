@@ -1,4 +1,4 @@
-# HiTec University Library Management System
+# HITEC University Taxila Library Management System
 
 A modern, full-featured library management system built with Flask, featuring online book reading, rental requests, automatic fine calculation, and responsive design for both desktop and mobile.
 
@@ -227,13 +227,13 @@ docker run -p 5000:5000 library-system
 
 ## 📝 License
 
-Proprietary software for HiTec University. All rights reserved.
+Proprietary software for HITEC University Taxila. All rights reserved.
 
 ## 📞 Support
 
-- **Email:** library@hitec.edu.pk
+- **Email:** library@hitecuni.edu.pk
 - **Phone:** +92-51-9048-5000
-- **Location:** HiTec University, Taxila, Pakistan
+- **Location:** HITEC University Taxila, Pakistan
 - **Hours:** Mon-Fri: 8:00 AM - 10:00 PM, Sat: 9:00 AM - 5:00 PM
 
 ## 🙏 Acknowledgments
@@ -244,4 +244,4 @@ Proprietary software for HiTec University. All rights reserved.
 
 ---
 
-Made with ❤️ for HiTec University
+Made with ❤️ for HITEC University Taxila

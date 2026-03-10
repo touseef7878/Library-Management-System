@@ -257,7 +257,7 @@ with app.app_context():
         
         # Seed Admin
         print("\n3. Creating admin account...")
-        admin = Admin(username='admin', email='admin@hitec.edu.pk')
+        admin = Admin(username='admin', email='admin@hitecuni.edu.pk')
         admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
@@ -281,7 +281,7 @@ with app.app_context():
             
             student = Student(
                 name=name,
-                email=f"student{i+1}@hitec.edu.pk",
+                email=f"student{i+1}@hitecuni.edu.pk",
                 roll_number=roll_number,
                 phone=f"+92-{random.randint(300, 345)}-{random.randint(1000000, 9999999)}",
                 department=department,
@@ -394,7 +394,7 @@ The library management system allows students to:
 - Read books online after approval
 - Return books when finished
 
-Thank you for using the HiTec University Library System!
+Thank you for using the HITEC University Taxila Library System!
 """
             
             with open(file_path, 'w', encoding='utf-8') as f:

@@ -211,4 +211,4 @@ After seeding, you'll have:
 3. Check Python version: `python --version` (need 3.7+)
 4. Check dependencies: `pip list`
 
-For more help, contact: library@hitec.edu.pk
+For more help, contact: library@hitecuni.edu.pk

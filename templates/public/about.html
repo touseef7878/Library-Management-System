@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}About - HiTec University Library{% endblock %}
+{% block title %}About - HITEC University Taxila Library{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -330,7 +330,7 @@
 {% block content %}
 <div class="about-header">
     <div class="container">
-        <h1><i class="fas fa-info-circle"></i> About HiTec University Library</h1>
+        <h1><i class="fas fa-info-circle"></i> About HITEC University Taxila Library</h1>
     </div>
 </div>
 
@@ -432,7 +432,7 @@
             <div class="col-md-6">
                 <div class="direction-card">
                     <h6><i class="fas fa-bus"></i> By Public Transport</h6>
-                    <p>Regular buses available from Islamabad and Rawalpindi to HiTec University campus.</p>
+                    <p>Regular buses available from Islamabad and Rawalpindi to HITEC University Taxila campus.</p>
                 </div>
             </div>
         </div>
@@ -443,7 +443,7 @@
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-    // Initialize map with correct HITEC University Library coordinates
+    // Initialize map with correct HITEC University Taxila Library coordinates
     const lat = {{ settings.latitude }};
     const lng = {{ settings.longitude }};
     const map = L.map('map').setView([lat, lng], 17);

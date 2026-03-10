@@ -140,7 +140,7 @@ class Review(db.Model):
 
 class LibrarySettings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    library_name = db.Column(db.String(200), default='HiTec University Library')
+    library_name = db.Column(db.String(200), default='HITEC University Taxila Library')
     library_address = db.Column(db.String(500))
     library_phone = db.Column(db.String(20))
     library_email = db.Column(db.String(100))
@@ -1389,10 +1389,10 @@ def about():
     settings = LibrarySettings.query.first()
     if not settings:
         settings = LibrarySettings(
-            library_name='HITEC University Library',
-            library_address='HITEC University, Taxila, Pakistan',
+            library_name='HITEC University Taxila Library',
+            library_address='HITEC University Taxila, Pakistan',
             library_phone='+92-51-9048-5000',
-            library_email='library@hitec.edu.pk',
+            library_email='library@hitecuni.edu.pk',
             opening_hours='Mon-Fri: 8:00 AM - 10:00 PM | Sat: 9:00 AM - 5:00 PM | Sun: Closed',
             latitude=33.7265,
             longitude=72.8194
@@ -1896,7 +1896,7 @@ def init_db():
     
     # Create default admin if not exists
     if not Admin.query.filter_by(username='admin').first():
-        admin = Admin(username='admin', email='admin@hitec.edu.pk')
+        admin = Admin(username='admin', email='admin@hitecuni.edu.pk')
         admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
@@ -1904,10 +1904,10 @@ def init_db():
     # Create library settings if not exists
     if not LibrarySettings.query.first():
         settings = LibrarySettings(
-            library_name='HITEC University Library',
-            library_address='HITEC University, Taxila, Pakistan',
+            library_name='HITEC University Taxila Library',
+            library_address='HITEC University Taxila, Pakistan',
             library_phone='+92-51-9048-5000',
-            library_email='library@hitec.edu.pk',
+            library_email='library@hitecuni.edu.pk',
             opening_hours='Mon-Fri: 8:00 AM - 10:00 PM | Sat: 9:00 AM - 5:00 PM | Sun: Closed',
             latitude=33.7265,
             longitude=72.8194

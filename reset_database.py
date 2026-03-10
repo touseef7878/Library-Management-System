@@ -107,7 +107,7 @@ def run_setup_book_content():
 
 def main():
     """Main reset function"""
-    print_header("HiTec Library - Complete Database Reset")
+    print_header("HITEC Library - Complete Database Reset")
     
     # Confirm with user
     if not confirm_reset():
