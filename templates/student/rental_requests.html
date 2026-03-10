@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}My Rental Requests - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .requests-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .request-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+        transition: all 0.2s ease;
+        overflow: hidden;
+    }
+    
+    .request-card:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .request-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .request-body {
+        padding: 1.5rem;
+        background: white;
+    }
+    
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .status-pending {
+        background-color: #FF851B;
+        color: white;
+    }
+    
+    .status-approved {
+        background-color: #2ECC40;
+        color: white;
+    }
+    
+    .status-rejected {
+        background-color: #FF4136;
+        color: white;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .info-item {
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .info-label {
+        color: #666;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        color: var(--dark-text);
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="requests-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-2">
+                        <i class="fas fa-clipboard-list"></i> My Rental Requests
+                    </h1>
+                    <p class="mb-0 opacity-75">Track your book rental requests and their status</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/student/dashboard" class="btn btn-light">
+                        <i class="fas fa-arrow-left"></i> Dashboard
+                    </a>
+                    <a href="/books" class="btn btn-success">
+                        <i class="fas fa-search"></i> Browse Books
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if requests %}
+        {% for request in requests %}
+        <div class="request-card">
+            <div class="request-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ request.book.title }}</h5>
+                        <p class="mb-0 opacity-75">by {{ request.book.author }}</p>
+                    </div>
+                    <span class="status-badge status-{{ request.status }}">
+                        {% if request.status == 'pending' %}
+                        <i class="fas fa-clock"></i>
+                        {% elif request.status == 'approved' %}
+                        <i class="fas fa-check-circle"></i>
+                        {% else %}
+                        <i class="fas fa-times-circle"></i>
+                        {% endif %}
+                        {{ request.status|title }}
+                    </span>
+                </div>
+            </div>
+            <div class="request-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Request Date</div>
+                        <div class="info-value">{{ request.request_date.strftime('%d %b %Y') }}</div>
+                    </div>
+                    
+                    {% if request.status == 'approved' %}
+                    <div class="info-item">
+                        <div class="info-label">Loan Start</div>
+                        <div class="info-value">{{ request.loan_start_date.strftime('%d %b %Y') if request.loan_start_date else 'N/A' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Due Date</div>
+                        <div class="info-value">{{ request.loan_end_date.strftime('%d %b %Y') if request.loan_end_date else 'N/A' }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="info-item">
+                        <div class="info-label">Book ISBN</div>
+                        <div class="info-value">{{ request.book.isbn or 'N/A' }}</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Genre</div>
+                        <div class="info-value">{{ request.book.genre or 'N/A' }}</div>
+                    </div>
+                </div>
+                
+                {% if request.notes %}
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Admin Note:</strong> {{ request.notes }}
+                </div>
+                {% endif %}
+                
+                {% if request.status == 'approved' %}
+                <div class="mt-3">
+                    <a href="/student/loans" class="btn btn-primary">
+                        <i class="fas fa-book-open"></i> View My Loans
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <h3 class="text-muted mb-3">No Rental Requests Yet</h3>
+            <p class="text-muted mb-4">You haven't requested any books yet. Browse our collection and request books to rent them.</p>
+            <a href="/books" class="btn btn-primary btn-lg">
+                <i class="fas fa-search"></i> Browse Books
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

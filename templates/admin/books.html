@@ -4,302 +4,445 @@
 
 {% block extra_css %}
 <style>
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .container-fluid {
-            padding: 0 1rem;
-        }
-        
-        h1 {
-            font-size: 1.6rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .card {
-            margin-bottom: 1rem;
-        }
-        
-        .card-body {
-            padding: 1rem;
-        }
-        
-        .btn {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-        }
-        
-        .table {
-            font-size: 0.85rem;
-        }
-        
-        .table td, .table th {
-            padding: 0.5rem;
-        }
-        
-        .badge {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.6rem;
-        }
-        
-        .pagination {
-            flex-wrap: wrap;
-            gap: 0.25rem;
-        }
-        
-        .page-link {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.85rem;
-        }
+    .book-card {
+        transition: all 0.3s ease;
+        height: 100%;
     }
     
-    @media (max-width: 576px) {
-        .container-fluid {
-            padding: 0 0.75rem;
-        }
-        
-        h1 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .text-end {
-            text-align: center !important;
-        }
-        
-        .text-end .btn {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-        
-        .card {
-            margin-bottom: 0.75rem;
-            border-radius: 8px;
-        }
-        
-        .card-body {
-            padding: 0.75rem;
-        }
-        
-        .form-control {
-            font-size: 0.85rem;
-            padding: 0.5rem;
-        }
-        
-        .btn {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
-        .btn.w-100 {
-            width: 100%;
-        }
-        
-        .table {
-            font-size: 0.7rem;
-        }
-        
-        .table td, .table th {
-            padding: 0.4rem 0.2rem;
-        }
-        
-        .table strong {
-            font-size: 0.7rem;
-        }
-        
-        .table code {
-            font-size: 0.65rem;
-        }
-        
-        .badge {
-            font-size: 0.65rem;
-            padding: 0.3rem 0.4rem;
-        }
-        
-        .btn-sm {
-            font-size: 0.7rem;
-            padding: 0.3rem 0.5rem;
-        }
-        
-        .pagination {
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            justify-content: center;
-        }
-        
-        .page-link {
-            padding: 0.3rem 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        .alert {
-            padding: 1rem 0.75rem;
-            font-size: 0.85rem;
-        }
-        
-        .alert i {
-            font-size: 1.5rem;
-        }
-        
-        .py-4 {
-            padding-top: 1rem !important;
-            padding-bottom: 1rem !important;
-        }
-        
-        .mb-4 {
-            margin-bottom: 0.75rem !important;
-        }
-        
-        .row.g-2 {
-            gap: 0.5rem !important;
-        }
-        
-        .col-md-10, .col-md-2 {
-            padding-right: 0.375rem;
-            padding-left: 0.375rem;
-        }
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .book-cover {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .book-cover-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .stat-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    .view-toggle {
+        background: white;
+        border-radius: 8px;
+        padding: 0.25rem;
+    }
+    
+    .view-toggle .btn {
+        border: none;
+        background: transparent;
+        color: #666;
+    }
+    
+    .view-toggle .btn.active {
+        background: var(--primary-color);
+        color: white;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
+    <!-- Header -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="text-primary">
+        <div class="col-md-6">
+            <h1 class="text-primary mb-2">
                 <i class="fas fa-book"></i> Books Management
             </h1>
+            <p class="text-muted">Manage your library's book collection</p>
         </div>
-        <div class="col-md-4 text-end">
+        <div class="col-md-6 text-end">
+            <a href="/admin/dashboard" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
             <a href="/admin/books/add" class="btn btn-primary">
                 <i class="fas fa-plus-circle"></i> Add New Book
             </a>
         </div>
     </div>
     
-    <!-- Search -->
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Books</p>
+                            <h3 class="text-primary mb-0">{{ books.total }}</h3>
+                        </div>
+                        <i class="fas fa-book fa-2x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Available</p>
+                            <h3 class="text-success mb-0">{{ books.items|selectattr('available_copies', 'gt', 0)|list|length }}</h3>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Out of Stock</p>
+                            <h3 class="text-danger mb-0">{{ books.items|selectattr('available_copies', 'eq', 0)|list|length }}</h3>
+                        </div>
+                        <i class="fas fa-exclamation-circle fa-2x text-danger opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Copies</p>
+                            <h3 class="text-info mb-0">{{ books.items|sum(attribute='total_copies') }}</h3>
+                        </div>
+                        <i class="fas fa-layer-group fa-2x text-info opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search and Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
-            <form method="GET" class="row g-2">
-                <div class="col-md-10">
-                    <input type="text" class="form-control" name="search" placeholder="Search by title, author, or ISBN..." value="{{ search }}">
+            <form method="GET" class="row g-3">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" name="search" placeholder="Search by title, author, ISBN, or genre..." value="{{ search }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select name="view" class="form-select" onchange="this.form.submit()">
+                        <option value="grid" {% if request.args.get('view', 'grid') == 'grid' %}selected{% endif %}>Grid View</option>
+                        <option value="table" {% if request.args.get('view') == 'table' %}selected{% endif %}>Table View</option>
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-search"></i> Search
+                        <i class="fas fa-filter"></i> Filter
                     </button>
                 </div>
             </form>
         </div>
     </div>
     
-    <!-- Books Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            {% if books.items %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Genre</th>
-                            <th>ISBN</th>
-                            <th>Total</th>
-                            <th>Available</th>
-                            <th>Rating</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for book in books.items %}
-                        <tr>
-                            <td>
-                                <strong>{{ book.title[:40] }}</strong>
-                            </td>
-                            <td>{{ book.author }}</td>
-                            <td>
-                                {% if book.genre %}
-                                <span class="badge bg-info">{{ book.genre }}</span>
-                                {% else %}
-                                <span class="text-muted">-</span>
-                                {% endif %}
-                            </td>
-                            <td><code>{{ book.isbn or '-' }}</code></td>
-                            <td>
-                                <span class="badge bg-secondary">{{ book.total_copies }}</span>
-                            </td>
-                            <td>
-                                {% if book.available_copies > 0 %}
-                                <span class="badge bg-success">{{ book.available_copies }}</span>
-                                {% else %}
-                                <span class="badge bg-danger">0</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <i class="fas fa-star text-warning"></i> {{ "%.1f"|format(book.average_rating) }}
-                            </td>
-                            <td>
-                                <a href="/admin/books/{{ book.id }}/edit" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" action="/admin/books/{{ book.id }}/delete" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    {% if books.items %}
+        {% if request.args.get('view') == 'table' %}
+        <!-- Table View -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Cover</th>
+                                <th>Title & Author</th>
+                                <th>Genre</th>
+                                <th>ISBN</th>
+                                <th>Copies</th>
+                                <th>Rating</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for book in books.items %}
+                            <tr>
+                                <td>
+                                    {% if book.cover_image %}
+                                    <img src="{{ book.cover_image }}" alt="{{ book.title }}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
+                                    {% else %}
+                                    <div style="width: 50px; height: 70px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-book text-white"></i>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong class="d-block">{{ book.title }}</strong>
+                                    <small class="text-muted">{{ book.author }}</small>
+                                </td>
+                                <td>
+                                    {% if book.genre %}
+                                    <span class="badge bg-info">{{ book.genre }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td><code class="small">{{ book.isbn or '-' }}</code></td>
+                                <td>
+                                    <span class="stat-badge bg-light">
+                                        <i class="fas fa-layer-group text-secondary"></i>
+                                        {{ book.total_copies }}
+                                    </span>
+                                    <span class="stat-badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %} text-white">
+                                        <i class="fas fa-check-circle"></i>
+                                        {{ book.available_copies }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <strong>{{ "%.1f"|format(book.average_rating) }}</strong>
+                                    <small class="text-muted">({{ book.reviews|length }})</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="/admin/books/{{ book.id }}/edit" class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#copiesModal{{ book.id }}" title="Manage Copies">
+                                            <i class="fas fa-layer-group"></i>
+                                        </button>
+                                        <a href="/admin/books/{{ book.id }}/upload" class="btn btn-sm btn-primary" title="Upload Online Version">
+                                            <i class="fas fa-upload"></i>
+                                        </a>
+                                        <form method="POST" action="/admin/books/{{ book.id }}/delete" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this book? This cannot be undone.')" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Copies Management Modal -->
+                            <div class="modal fade" id="copiesModal{{ book.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><i class="fas fa-layer-group"></i> Manage Copies - {{ book.title }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-info">
+                                                <strong>Current Status:</strong><br>
+                                                Total Copies: <strong>{{ book.total_copies }}</strong><br>
+                                                Available: <strong>{{ book.available_copies }}</strong><br>
+                                                On Loan: <strong>{{ book.total_copies - book.available_copies }}</strong>
+                                            </div>
+                                            
+                                            <form method="POST" action="/admin/books/{{ book.id }}/copies">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Action</label>
+                                                    <select name="action" class="form-select" required>
+                                                        <option value="add">Add Copies</option>
+                                                        <option value="remove">Remove Copies</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Quantity</label>
+                                                    <input type="number" name="quantity" class="form-control" min="1" value="1" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary w-100">Update Copies</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            
-            <!-- Pagination -->
-            {% if books.pages > 1 %}
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if books.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1&search={{ search }}">First</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.prev_num }}&search={{ search }}">Previous</a>
-                    </li>
+        </div>
+        {% else %}
+        <!-- Grid View (Default) -->
+        <div class="row">
+            {% for book in books.items %}
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card book-card border-0 shadow-sm">
+                    {% if book.cover_image %}
+                    <img src="{{ book.cover_image }}" class="book-cover" alt="{{ book.title }}">
+                    {% else %}
+                    <div class="book-cover-placeholder">
+                        <i class="fas fa-book fa-4x text-white opacity-50"></i>
+                    </div>
                     {% endif %}
                     
-                    {% for page_num in books.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num == books.page %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                            {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_num }}&search={{ search }}">{{ page_num }}</a>
-                            </li>
-                            {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title text-primary mb-2" title="{{ book.title }}">
+                            {{ book.title[:40] }}{% if book.title|length > 40 %}...{% endif %}
+                        </h6>
+                        <p class="card-text text-muted small mb-2">{{ book.author }}</p>
+                        
+                        {% if book.genre %}
+                        <span class="badge bg-info mb-2">{{ book.genre }}</span>
                         {% endif %}
-                    {% endfor %}
-                    
-                    {% if books.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.next_num }}&search={{ search }}">Next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.pages }}&search={{ search }}">Last</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
-            
-            {% else %}
-            <div class="alert alert-info text-center py-4">
-                <i class="fas fa-search fa-2x mb-2"></i>
-                <p>No books found</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-star text-warning"></i>
+                                {{ "%.1f"|format(book.average_rating) }}
+                            </small>
+                            <small class="text-muted">
+                                <i class="fas fa-comment"></i>
+                                {{ book.reviews|length }}
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="stat-badge bg-light">
+                                <i class="fas fa-layer-group text-secondary"></i>
+                                {{ book.total_copies }}
+                            </span>
+                            <span class="stat-badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %} text-white">
+                                <i class="fas fa-check-circle"></i>
+                                {{ book.available_copies }}
+                            </span>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="/admin/books/{{ book.id }}/edit" class="btn btn-sm btn-warning flex-fill">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#copiesModal{{ book.id }}" title="Manage Copies">
+                                <i class="fas fa-layer-group"></i>
+                            </button>
+                            <a href="/admin/books/{{ book.id }}/upload" class="btn btn-sm btn-primary" title="Upload">
+                                <i class="fas fa-upload"></i>
+                            </a>
+                            <form method="POST" action="/admin/books/{{ book.id }}/delete" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this book?')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% endif %}
+            
+            <!-- Copies Management Modal -->
+            <div class="modal fade" id="copiesModal{{ book.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><i class="fas fa-layer-group"></i> Manage Copies</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="text-primary mb-3">{{ book.title }}</h6>
+                            <div class="alert alert-info">
+                                <strong>Current Status:</strong><br>
+                                Total Copies: <strong>{{ book.total_copies }}</strong><br>
+                                Available: <strong>{{ book.available_copies }}</strong><br>
+                                On Loan: <strong>{{ book.total_copies - book.available_copies }}</strong>
+                            </div>
+                            
+                            <form method="POST" action="/admin/books/{{ book.id }}/copies">
+                                <div class="mb-3">
+                                    <label class="form-label">Action</label>
+                                    <select name="action" class="form-select" required>
+                                        <option value="add">Add Copies</option>
+                                        <option value="remove">Remove Copies</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" name="quantity" class="form-control" min="1" value="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-save"></i> Update Copies
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Pagination -->
+        {% if books.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if books.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&search={{ search }}&view={{ request.args.get('view', 'grid') }}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.prev_num }}&search={{ search }}&view={{ request.args.get('view', 'grid') }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == books.page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page_num }}&search={{ search }}&view={{ request.args.get('view', 'grid') }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if books.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.next_num }}&search={{ search }}&view={{ request.args.get('view', 'grid') }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.pages }}&search={{ search }}&view={{ request.args.get('view', 'grid') }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-book fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No Books Found</h3>
+            <p class="text-muted">{% if search %}Try a different search term{% else %}Start by adding your first book{% endif %}</p>
+            <a href="/admin/books/add" class="btn btn-primary mt-3">
+                <i class="fas fa-plus-circle"></i> Add New Book
+            </a>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

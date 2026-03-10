@@ -194,16 +194,65 @@
 {% block content %}
 <div class="container py-5">
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-md-4 order-md-1 order-2">
+            <!-- Book Cover -->
             {% if book.cover_image %}
-            <img src="{{ book.cover_image }}" class="img-fluid rounded shadow" alt="{{ book.title }}">
+            <img src="{{ book.cover_image }}" class="img-fluid rounded shadow mb-3" alt="{{ book.title }}">
             {% else %}
-            <div class="bg-secondary d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
+            <div class="bg-secondary d-flex align-items-center justify-content-center rounded shadow mb-3" style="height: 400px;">
                 <i class="fas fa-book fa-5x text-white opacity-50"></i>
             </div>
             {% endif %}
+            
+            <!-- Action Card Below Book Image - Shows after description on mobile -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    {% if 'student_id' in session %}
+                        {% if has_active_loan %}
+                        <div class="alert alert-success mb-0">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>You have an active loan!</strong>
+                            <a href="/student/loans" class="alert-link d-block mt-2">View your loans</a>
+                        </div>
+                        {% elif has_pending_request %}
+                        <div class="alert alert-warning mb-0">
+                            <i class="fas fa-clock"></i>
+                            <strong>Pending request</strong>
+                            <a href="/student/rental/requests" class="alert-link d-block mt-2">Check status</a>
+                        </div>
+                        {% else %}
+                        <h5 class="text-primary mb-3"><i class="fas fa-book-reader"></i> Want to read this book?</h5>
+                        
+                        {% if book.available_copies > 0 %}
+                        <form method="POST" action="/student/rental/request/{{ book.id }}">
+                            <button type="submit" class="btn btn-primary w-100 mb-2" onclick="return confirm('Request to rent this book? You will be notified when approved.')">
+                                <i class="fas fa-paper-plane"></i> Request to Rent
+                            </button>
+                        </form>
+                        <small class="text-muted">Read online after approval</small>
+                        {% else %}
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-exclamation-triangle"></i> Currently unavailable
+                        </div>
+                        <form method="POST" action="/student/book/{{ book.id }}/reserve">
+                            <button type="submit" class="btn btn-warning w-100 mb-2" onclick="return confirm('Reserve this book? You will be notified when it becomes available.')">
+                                <i class="fas fa-bookmark"></i> Reserve Book
+                            </button>
+                        </form>
+                        <small class="text-muted">Get notified when available</small>
+                        {% endif %}
+                        {% endif %}
+                    {% else %}
+                    <h5 class="text-primary mb-3"><i class="fas fa-book-reader"></i> Want to read this book?</h5>
+                    <p class="text-muted mb-3">Login to request this book</p>
+                    <a href="/login" class="btn btn-primary w-100">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 order-md-2 order-1">
             <h1 class="text-primary mb-2">{{ book.title }}</h1>
             <p class="lead text-muted mb-3">by {{ book.author }}</p>
             
@@ -266,6 +315,7 @@
         </div>
     </div>
     
+
     <!-- Reviews Section -->
     <div class="row mt-5">
         <div class="col-md-12">

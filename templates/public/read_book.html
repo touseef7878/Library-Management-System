@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Read {{ book.title }} - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .read-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+    }
+    
+    .book-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+    
+    .book-info {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .book-info h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .book-info p {
+        margin: 0.5rem 0 0 0;
+    }
+    
+    .reader-frame {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 70vh;
+        min-height: 500px;
+    }
+    
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .read-container {
+            margin: 1rem auto;
+        }
+        
+        .book-header {
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .book-info h1 {
+            font-size: 1.5rem;
+        }
+        
+        .reader-frame {
+            height: 50vh;
+            min-height: 400px;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="read-container">
+        <div class="book-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">{{ book.title }}</h1>
+                    <p class="book-info mb-2">by {{ book.author }}</p>
+                    <p class="book-info">
+                        <span class="badge bg-light text-dark me-2">{{ book.genre }}</span>
+                        <span class="badge bg-light text-dark">ISBN: {{ book.isbn }}</span>
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="/books/{{ book.id }}" class="btn btn-outline-light me-2 action-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Book
+                    </a>
+                    <a href="/student/loans" class="btn btn-outline-light action-btn">
+                        <i class="fas fa-book-open"></i> My Loans
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Reading Mode:</strong> This is a sample chapter. In a real system, this would contain the full book content.
+        </div>
+        
+        <div class="reader-frame">
+            {% if online_book.file_path %}
+            <iframe src="{{ url_for('static', filename=online_book.file_path) }}" width="100%" height="100%" title="Book Reader"></iframe>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-book fa-4x text-muted mb-3"></i>
+                <p class="text-muted">No online version available for this book</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

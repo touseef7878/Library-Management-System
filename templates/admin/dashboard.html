@@ -238,11 +238,25 @@
                 </div>
             </div>
         </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Pending Requests</p>
+                            <h3 class="text-warning mb-0">{{ pending_requests }}</h3>
+                        </div>
+                        <i class="fas fa-clipboard-list fa-3x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Fine Statistics -->
     <div class="row mb-4">
-        <div class="col-md-12">
+        <div class="col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -255,29 +269,136 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Active Reservations</p>
+                            <h2 class="text-info mb-0">{{ active_reservations }}</h2>
+                        </div>
+                        <i class="fas fa-bookmark fa-3x text-info opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <!-- Recent Loans -->
-    <div class="row">
+    <!-- Quick Actions -->
+    <div class="row mb-4">
         <div class="col-md-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/books/add" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-book fa-2x mb-2"></i>
+                                <p class="mb-0">Add Book</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/students/add" class="btn btn-success w-100 py-3">
+                                <i class="fas fa-user-plus fa-2x mb-2"></i>
+                                <p class="mb-0">Add Student</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/loans/create" class="btn btn-info w-100 py-3">
+                                <i class="fas fa-hand-holding-heart fa-2x mb-2"></i>
+                                <p class="mb-0">Create Loan</p>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/admin/rental-requests?status=pending" class="btn btn-warning w-100 py-3">
+                                <i class="fas fa-clipboard-list fa-2x mb-2"></i>
+                                <p class="mb-0">Pending Requests</p>
+                                {% if pending_requests > 0 %}
+                                <span class="badge bg-danger">{{ pending_requests }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-trophy"></i> Top Borrowed Books</h5>
+                </div>
+                <div class="card-body">
+                    {% if top_books %}
+                    <div class="list-group list-group-flush">
+                        {% for book, count in top_books %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ book.title[:40] }}</strong>
+                                <small class="text-muted d-block">{{ book.author }}</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ count }} loans</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-graduate"></i> Most Active Students</h5>
+                </div>
+                <div class="card-body">
+                    {% if top_students %}
+                    <div class="list-group list-group-flush">
+                        {% for student, count in top_students %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ student.name }}</strong>
+                                <small class="text-muted d-block">{{ student.roll_number }}</small>
+                            </div>
+                            <span class="badge bg-success rounded-pill">{{ count }} loans</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-history"></i> Recent Loans
+                        <i class="fas fa-book-open"></i> Recent Active Loans
                     </h5>
+                    <small class="opacity-75">Latest books issued to students</small>
                 </div>
                 <div class="card-body">
                     {% if recent_loans %}
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
-                            <thead>
+                            <thead class="table-light">
                                 <tr>
                                     <th>Student</th>
                                     <th>Book</th>
                                     <th>Loan Date</th>
-                                    <th>Due Date</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -287,9 +408,8 @@
                                         <strong>{{ loan.student.name }}</strong><br>
                                         <small class="text-muted">{{ loan.student.roll_number }}</small>
                                     </td>
-                                    <td>{{ loan.book.title }}</td>
+                                    <td>{{ loan.book.title[:30] }}</td>
                                     <td>{{ loan.loan_date.strftime('%d %b %Y') }}</td>
-                                    <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
                                     <td>
                                         {% if loan.is_returned %}
                                             <span class="badge bg-success">Returned</span>
@@ -299,18 +419,73 @@
                                             <span class="badge bg-info">Active</span>
                                         {% endif %}
                                     </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="/admin/loans" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list"></i> View All Loans
+                        </a>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-4">No recent loans</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-check"></i> Recent Rental Requests
+                    </h5>
+                    <small class="opacity-75">Student requests awaiting approval</small>
+                </div>
+                <div class="card-body">
+                    {% if recent_requests %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Book</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in recent_requests %}
+                                <tr>
                                     <td>
-                                        <a href="/admin/loans" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <strong>{{ request.student.name }}</strong><br>
+                                        <small class="text-muted">{{ request.student.roll_number }}</small>
+                                    </td>
+                                    <td>{{ request.book.title[:30] }}</td>
+                                    <td>{{ request.request_date.strftime('%d %b %Y') }}</td>
+                                    <td>
+                                        {% if request.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif request.status == 'approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    <div class="text-center mt-3">
+                        <a href="/admin/rental-requests" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list"></i> View All Requests
+                        </a>
+                    </div>
                     {% else %}
-                    <p class="text-muted text-center py-4">No recent loans</p>
+                    <p class="text-muted text-center py-4">No recent requests</p>
                     {% endif %}
                 </div>
             </div>

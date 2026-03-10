@@ -4,212 +4,202 @@
 
 {% block extra_css %}
 <style>
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .container-fluid {
-            padding: 0 1rem;
+    .student-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .student-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .student-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    
+    .status-active { background-color: #2ECC40; }
+    .status-suspended { background-color: #FF4136; }
+    .status-expired { background-color: #FF851B; }
+    
+    .bulk-actions-bar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1000;
+        animation: slideUp 0.3s ease;
+    }
+    
+    .bulk-actions-bar.show {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    @keyframes slideUp {
+        from {
+            bottom: -100px;
+            opacity: 0;
         }
-        
-        h1 {
-            font-size: 1.6rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .card {
-            margin-bottom: 1rem;
-        }
-        
-        .card-body {
-            padding: 1rem;
-        }
-        
-        .btn {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-        }
-        
-        .table {
-            font-size: 0.85rem;
-        }
-        
-        .table td, .table th {
-            padding: 0.5rem;
-        }
-        
-        .badge {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.6rem;
-        }
-        
-        .pagination {
-            flex-wrap: wrap;
-            gap: 0.25rem;
-        }
-        
-        .page-link {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.85rem;
+        to {
+            bottom: 20px;
+            opacity: 1;
         }
     }
     
-    @media (max-width: 576px) {
-        .container-fluid {
-            padding: 0 0.75rem;
-        }
-        
-        h1 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .text-end {
-            text-align: center !important;
-        }
-        
-        .text-end .btn {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-        
-        .card {
-            margin-bottom: 0.75rem;
-            border-radius: 8px;
-        }
-        
-        .card-body {
-            padding: 0.75rem;
-        }
-        
-        .form-control {
-            font-size: 0.85rem;
-            padding: 0.5rem;
-        }
-        
-        .btn {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
-        .btn.w-100 {
-            width: 100%;
-        }
-        
-        .table {
-            font-size: 0.7rem;
-        }
-        
-        .table td, .table th {
-            padding: 0.4rem 0.2rem;
-        }
-        
-        .table strong {
-            font-size: 0.7rem;
-        }
-        
-        .table small {
-            font-size: 0.65rem;
-        }
-        
-        .table code {
-            font-size: 0.65rem;
-        }
-        
-        .badge {
-            font-size: 0.65rem;
-            padding: 0.3rem 0.4rem;
-        }
-        
-        .btn-sm {
-            font-size: 0.7rem;
-            padding: 0.3rem 0.5rem;
-        }
-        
-        .pagination {
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            justify-content: center;
-        }
-        
-        .page-link {
-            padding: 0.3rem 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        .alert {
-            padding: 1rem 0.75rem;
-            font-size: 0.85rem;
-        }
-        
-        .alert i {
-            font-size: 1.5rem;
-        }
-        
-        .py-4 {
-            padding-top: 1rem !important;
-            padding-bottom: 1rem !important;
-        }
-        
-        .mb-4 {
-            margin-bottom: 0.75rem !important;
-        }
-        
-        .row.g-2 {
-            gap: 0.5rem !important;
-        }
-        
-        .col-md-10, .col-md-2 {
-            padding-right: 0.375rem;
-            padding-left: 0.375rem;
-        }
+    .student-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
+    <!-- Header -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="text-primary">
-                <i class="fas fa-users"></i> Students Management
+        <div class="col-md-6">
+            <h1 class="text-primary mb-2">
+                <i class="fas fa-user-graduate"></i> Students Management
             </h1>
+            <p class="text-muted">Manage student accounts and library cards</p>
         </div>
-        <div class="col-md-4 text-end">
+        <div class="col-md-6 text-end">
+            <a href="/admin/dashboard" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
             <a href="/admin/students/add" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Register Student
+                <i class="fas fa-user-plus"></i> Add New Student
             </a>
         </div>
     </div>
     
-    <!-- Search -->
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Students</p>
+                            <h3 class="text-primary mb-0">{{ students.total }}</h3>
+                        </div>
+                        <i class="fas fa-users fa-2x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Active Cards</p>
+                            <h3 class="text-success mb-0">{{ students.items|selectattr('card_status', 'eq', 'active')|list|length }}</h3>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-success opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Suspended</p>
+                            <h3 class="text-danger mb-0">{{ students.items|selectattr('card_status', 'eq', 'suspended')|list|length }}</h3>
+                        </div>
+                        <i class="fas fa-ban fa-2x text-danger opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">With Fines</p>
+                            <h3 class="text-warning mb-0">{{ students.items|selectattr('total_fines', 'gt', 0)|list|length }}</h3>
+                        </div>
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search and Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
-            <form method="GET" class="row g-2">
-                <div class="col-md-10">
-                    <input type="text" class="form-control" name="search" placeholder="Search by name, roll number, or card number..." value="{{ search }}">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" name="search" placeholder="Search by name, roll number, or library card..." value="{{ search }}">
+                    </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Status</option>
+                        <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>Active</option>
+                        <option value="suspended" {% if request.args.get('status') == 'suspended' %}selected{% endif %}>Suspended</option>
+                        <option value="expired" {% if request.args.get('status') == 'expired' %}selected{% endif %}>Expired</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-search"></i> Search
+                        <i class="fas fa-filter"></i> Filter
                     </button>
                 </div>
             </form>
         </div>
     </div>
     
+    <!-- Bulk Selection Info -->
+    <div class="alert alert-info mb-3">
+        <i class="fas fa-info-circle"></i>
+        <strong>Tip:</strong> Select multiple students using checkboxes to perform bulk actions
+    </div>
+    
     <!-- Students Table -->
+    {% if students.items %}
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            {% if students.items %}
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>
+                                <input type="checkbox" id="selectAll" class="student-checkbox" title="Select All">
+                            </th>
+                            <th>Student</th>
                             <th>Roll Number</th>
-                            <th>Card Number</th>
+                            <th>Library Card</th>
                             <th>Department</th>
-                            <th>Card Status</th>
-                            <th>Total Fines</th>
+                            <th>Status</th>
+                            <th>Fines</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -217,35 +207,54 @@
                         {% for student in students.items %}
                         <tr>
                             <td>
-                                <strong>{{ student.name }}</strong><br>
-                                <small class="text-muted">{{ student.email }}</small>
+                                <input type="checkbox" class="student-checkbox student-select" value="{{ student.id }}" data-name="{{ student.name }}">
                             </td>
-                            <td>{{ student.roll_number }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ student.profile_image }}" alt="{{ student.name }}" class="student-avatar me-3">
+                                    <div>
+                                        <strong class="d-block">{{ student.name }}</strong>
+                                        <small class="text-muted">{{ student.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><code>{{ student.roll_number }}</code></td>
                             <td><code>{{ student.library_card_number }}</code></td>
-                            <td>{{ student.department or '-' }}</td>
                             <td>
-                                {% if student.card_status == 'active' %}
-                                <span class="badge bg-success">Active</span>
-                                {% elif student.card_status == 'suspended' %}
-                                <span class="badge bg-danger">Suspended</span>
-                                {% else %}
-                                <span class="badge bg-warning">Expired</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if student.total_fines > 0 %}
-                                <span class="badge bg-danger">PKR {{ "%.2f"|format(student.total_fines) }}</span>
+                                {% if student.department %}
+                                <span class="badge bg-info">{{ student.department }}</span>
+                                <small class="text-muted d-block">Sem {{ student.semester }}</small>
                                 {% else %}
                                 <span class="text-muted">-</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="/admin/students/{{ student.id }}" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="/admin/students/{{ student.id }}/edit" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                <span class="status-indicator status-{{ student.card_status }}"></span>
+                                <span class="badge {% if student.card_status == 'active' %}bg-success{% elif student.card_status == 'suspended' %}bg-danger{% else %}bg-warning{% endif %}">
+                                    {{ student.card_status|title }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if student.total_fines > 0 %}
+                                <span class="badge bg-warning text-dark">PKR {{ "%.2f"|format(student.total_fines) }}</span>
+                                {% else %}
+                                <span class="text-success">No Fines</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="/admin/students/{{ student.id }}" class="btn btn-sm btn-info" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/admin/students/{{ student.id }}/edit" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="POST" action="/admin/students/{{ student.id }}/reset-password" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-secondary" onclick="return confirm('Reset password to roll number?')" title="Reset Password">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -259,46 +268,151 @@
                 <ul class="pagination justify-content-center">
                     {% if students.has_prev %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1&search={{ search }}">First</a>
+                        <a class="page-link" href="?page=1&search={{ search }}&status={{ request.args.get('status', '') }}">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ students.prev_num }}&search={{ search }}">Previous</a>
+                        <a class="page-link" href="?page={{ students.prev_num }}&search={{ search }}&status={{ request.args.get('status', '') }}">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
                     </li>
                     {% endif %}
                     
-                    {% for page_num in students.iter_pages() %}
+                    {% for page_num in students.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                         {% if page_num %}
-                            {% if page_num == students.page %}
-                            <li class="page-item active">
-                                <span class="page-link">{{ page_num }}</span>
+                            <li class="page-item {% if page_num == students.page %}active{% endif %}">
+                                <a class="page-link" href="?page={{ page_num }}&search={{ search }}&status={{ request.args.get('status', '') }}">{{ page_num }}</a>
                             </li>
-                            {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_num }}&search={{ search }}">{{ page_num }}</a>
-                            </li>
-                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
                         {% endif %}
                     {% endfor %}
                     
                     {% if students.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ students.next_num }}&search={{ search }}">Next</a>
+                        <a class="page-link" href="?page={{ students.next_num }}&search={{ search }}&status={{ request.args.get('status', '') }}">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ students.pages }}&search={{ search }}">Last</a>
+                        <a class="page-link" href="?page={{ students.pages }}&search={{ search }}&status={{ request.args.get('status', '') }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
             {% endif %}
-            
-            {% else %}
-            <div class="alert alert-info text-center py-4">
-                <i class="fas fa-search fa-2x mb-2"></i>
-                <p>No students found</p>
-            </div>
-            {% endif %}
         </div>
     </div>
+    {% else %}
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-user-graduate fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No Students Found</h3>
+            <p class="text-muted">{% if search %}Try a different search term{% else %}Start by adding your first student{% endif %}</p>
+            <a href="/admin/students/add" class="btn btn-primary mt-3">
+                <i class="fas fa-user-plus"></i> Add New Student
+            </a>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+<!-- Bulk Actions Bar -->
+<div class="bulk-actions-bar" id="bulkActionsBar">
+    <span id="selectedCount">0</span> selected
+    <button type="button" class="btn btn-success btn-sm" onclick="bulkAction('activate')">
+        <i class="fas fa-check-circle"></i> Activate
+    </button>
+    <button type="button" class="btn btn-warning btn-sm" onclick="bulkAction('suspend')">
+        <i class="fas fa-ban"></i> Suspend
+    </button>
+    <button type="button" class="btn btn-danger btn-sm" onclick="bulkAction('delete')">
+        <i class="fas fa-trash"></i> Delete
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm" onclick="clearSelection()">
+        <i class="fas fa-times"></i> Clear
+    </button>
+</div>
+
+<script>
+// Bulk selection functionality
+const selectAllCheckbox = document.getElementById('selectAll');
+const studentCheckboxes = document.querySelectorAll('.student-select');
+const bulkActionsBar = document.getElementById('bulkActionsBar');
+const selectedCountSpan = document.getElementById('selectedCount');
+
+function updateBulkActionsBar() {
+    const selectedCount = document.querySelectorAll('.student-select:checked').length;
+    selectedCountSpan.textContent = selectedCount;
+    
+    if (selectedCount > 0) {
+        bulkActionsBar.classList.add('show');
+    } else {
+        bulkActionsBar.classList.remove('show');
+    }
+}
+
+selectAllCheckbox.addEventListener('change', function() {
+    studentCheckboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+    updateBulkActionsBar();
+});
+
+studentCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateBulkActionsBar);
+});
+
+function bulkAction(action) {
+    const selectedIds = Array.from(document.querySelectorAll('.student-select:checked')).map(cb => cb.value);
+    
+    if (selectedIds.length === 0) {
+        alert('Please select at least one student');
+        return;
+    }
+    
+    let confirmMessage = '';
+    if (action === 'activate') {
+        confirmMessage = `Activate ${selectedIds.length} student(s)?`;
+    } else if (action === 'suspend') {
+        confirmMessage = `Suspend ${selectedIds.length} student(s)?`;
+    } else if (action === 'delete') {
+        confirmMessage = `Delete ${selectedIds.length} student(s)? This cannot be undone!`;
+    }
+    
+    if (confirm(confirmMessage)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/admin/students/bulk-action';
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+        
+        selectedIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'student_ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function clearSelection() {
+    studentCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    selectAllCheckbox.checked = false;
+    updateBulkActionsBar();
+}
+</script>
 {% endblock %}

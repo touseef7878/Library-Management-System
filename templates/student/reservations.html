@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}My Reservations - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-primary mb-2">
+                <i class="fas fa-bookmark"></i> My Book Reservations
+            </h1>
+            <p class="text-muted">Track your book reservations and get notified when they become available</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/student/dashboard" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <h3 class="text-primary mb-3">Active Reservations</h3>
+    {% if active_reservations %}
+    <div class="row">
+        {% for reservation in active_reservations %}
+        <div class="col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ reservation.book.title }}</h5>
+                    <p class="text-muted mb-2">by {{ reservation.book.author }}</p>
+                    
+                    <div class="mb-2">
+                        <small class="text-muted">Reserved on:</small>
+                        <strong>{{ reservation.reservation_date.strftime('%d %b %Y') }}</strong>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">Expires on:</small>
+                        <strong>{{ reservation.expiry_date.strftime('%d %b %Y') }}</strong>
+                    </div>
+                    
+                    {% if reservation.notified %}
+                    <div class="alert alert-success mb-2">
+                        <i class="fas fa-check-circle"></i> Book is now available! Please request to rent it.
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex gap-2">
+                        {% if reservation.notified %}
+                        <a href="/books/{{ reservation.book_id }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-book"></i> Request to Rent
+                        </a>
+                        {% endif %}
+                        <form method="POST" action="/student/reservation/{{ reservation.id }}/cancel" style="display: inline;">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Cancel this reservation?')">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> You have no active reservations
+    </div>
+    {% endif %}
+    
+    {% if past_reservations %}
+    <h3 class="text-primary mb-3 mt-5">Past Reservations</h3>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Reserved On</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in past_reservations %}
+                <tr>
+                    <td>
+                        <strong>{{ reservation.book.title }}</strong><br>
+                        <small class="text-muted">{{ reservation.book.author }}</small>
+                    </td>
+                    <td>{{ reservation.reservation_date.strftime('%d %b %Y') }}</td>
+                    <td>
+                        {% if reservation.status == 'fulfilled' %}
+                        <span class="badge bg-success">Fulfilled</span>
+                        {% elif reservation.status == 'cancelled' %}
+                        <span class="badge bg-secondary">Cancelled</span>
+                        {% else %}
+                        <span class="badge bg-warning">Expired</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}HiTec University Library{% endblock %}</title>
     
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -20,6 +20,7 @@
             --danger-color: #FF4136;
             --success-color: #2ECC40;
             --warning-color: #FF851B;
+            --info-color: #39CCCC;
             --light-bg: #f8f9fa;
             --dark-text: #2c3e50;
         }
@@ -33,11 +34,178 @@
             color: var(--dark-text);
         }
         
+        /* Offcanvas Mobile Menu Styles */
+        .offcanvas {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+            color: white !important;
+            visibility: visible !important;
+        }
+        
+        .offcanvas-end {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+            width: 280px !important;
+        }
+        
+        .offcanvas-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.5rem;
+            background: transparent;
+            z-index: 1;
+        }
+        
+        .offcanvas-title {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .offcanvas-body {
+            padding: 1rem 0;
+            overflow-y: auto;
+            background: transparent;
+            z-index: 1;
+            min-height: 200px;
+        }
+        
+        .offcanvas-body * {
+            visibility: visible !important;
+        }
+        
+        .offcanvas .navbar-nav {
+            width: 100%;
+            display: flex !important;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .offcanvas .nav-item {
+            width: 100%;
+            display: block !important;
+        }
+        
+        .offcanvas .nav-link {
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            margin: 0.25rem 0;
+            border-radius: 0;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex !important;
+            align-items: center;
+            text-decoration: none;
+            width: 100%;
+        }
+        
+        .offcanvas .nav-link span {
+            color: white !important;
+            display: inline-block;
+        }
+        
+        .offcanvas .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            padding-left: 2rem !important;
+        }
+        
+        .offcanvas .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .offcanvas .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 0.5rem;
+            color: white !important;
+            display: inline-block;
+        }
+        
+        .offcanvas .badge {
+            background-color: var(--danger-color) !important;
+            color: white !important;
+        }
+        
+        .offcanvas .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.2);
+            margin: 0.5rem 1.5rem;
+            opacity: 1;
+        }
+        
+        .offcanvas .login-btn {
+            color: white !important;
+            background: rgba(57, 204, 204, 0.3) !important;
+            border: 1px solid rgba(57, 204, 204, 0.5);
+            margin: 0.5rem 1rem !important;
+            border-radius: 8px !important;
+            font-weight: 600;
+        }
+        
+        .offcanvas .login-btn:hover {
+            background: rgba(57, 204, 204, 0.5) !important;
+            border-color: var(--accent-color);
+        }
+        
+        .offcanvas hr {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            opacity: 1;
+        }
+        
+        .offcanvas .text-danger {
+            color: #ff6b6b !important;
+        }
+        
+        .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+            opacity: 0.8;
+        }
+        
+        .btn-close:hover {
+            opacity: 1;
+        }
+        
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 0.75rem;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 0.375rem;
+            background: transparent;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+            outline: none;
+        }
+        
+        .navbar-toggler:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar-toggler-icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 100%;
+        }
+        
+        /* Prevent zoom on mobile */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+        
         /* Navbar */
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 0.75rem 0;
+            backdrop-filter: blur(10px);
+            z-index: 1030;
+            position: relative;
         }
         
         .navbar-brand {
@@ -45,114 +213,287 @@
             font-size: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            transition: all 0.3s ease;
         }
         
-        .navbar-brand img {
-            height: 40px;
-            width: auto;
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .brand-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        .brand-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .brand-tagline {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .nav-link {
             color: white !important;
             font-weight: 500;
             transition: all 0.3s ease;
-            margin: 0 5px;
+            margin: 0 0.25rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
         }
         
         .nav-link:hover {
-            color: var(--accent-color) !important;
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
         
         .nav-link.active {
-            color: var(--accent-color) !important;
-            border-bottom: 2px solid var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: none;
         }
         
-        /* Dropdown Menu */
-        .dropdown-menu {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 0.5rem 0;
+        .nav-link i {
+            font-size: 1.1rem;
         }
         
-        .dropdown-item {
-            color: white;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.75rem 1.5rem;
-        }
-        
-        .dropdown-item:hover {
+        /* User Dropdown */
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem !important;
             background: rgba(255, 255, 255, 0.1);
-            color: var(--accent-color);
-            padding-left: 2rem;
-        }
-        
-        .dropdown-item.active {
-            background: rgba(57, 204, 204, 0.2);
-            color: var(--accent-color);
-        }
-        
-        .dropdown-divider {
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .admin-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid var(--accent-color);
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1.2rem;
-            border-radius: 6px;
+            border-radius: 50px;
             transition: all 0.3s ease;
         }
         
-        .admin-btn:hover {
-            background: var(--accent-color);
-            color: var(--primary-color);
+        .user-dropdown:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+            text-align: left;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: white;
+        }
+        
+        .user-role {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Login Buttons */
+        .login-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 0.5rem 1.25rem !important;
+            margin: 0 0.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .login-btn.admin-login {
+            background: rgba(255, 65, 54, 0.2);
+            border-color: rgba(255, 65, 54, 0.5);
+        }
+        
+        .login-btn.admin-login:hover {
+            background: rgba(255, 65, 54, 0.3);
+            border-color: rgba(255, 65, 54, 0.7);
+        }
+        
+        /* Modern Dropdown Menu */
+        .modern-dropdown {
+            background: white;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            min-width: 280px;
+            margin-top: 0.5rem;
+            z-index: 1050 !important;
+            position: absolute !important;
+        }
+        
+        .dropdown-menu {
+            z-index: 1050 !important;
+        }
+        
+        .nav-item.dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu.show {
+            z-index: 1050 !important;
+        }
+        
+        .modern-dropdown .dropdown-header {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.75rem 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .modern-dropdown .dropdown-item {
+            color: var(--dark-text);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+            background: transparent;
+        }
+        
+        .modern-dropdown .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+        
+        .modern-dropdown .dropdown-item:hover {
+            background: rgba(0, 116, 217, 0.08);
+            color: var(--secondary-color);
+            padding-left: 1.75rem;
+        }
+        
+        .modern-dropdown .dropdown-item:active {
+            background: rgba(0, 116, 217, 0.12);
+        }
+        
+        .modern-dropdown .dropdown-item.text-danger {
+            color: var(--danger-color);
+        }
+        
+        .modern-dropdown .dropdown-item.text-danger i {
+            color: var(--danger-color);
+        }
+        
+        .modern-dropdown .dropdown-item.text-danger:hover {
+            background: rgba(255, 65, 54, 0.08);
+            color: var(--danger-color);
+        }
+        
+        .modern-dropdown .dropdown-item-text {
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .modern-dropdown .dropdown-divider {
+            border-color: rgba(0, 0, 0, 0.08);
+            margin: 0.5rem 0;
+        }
+        
+        .modern-dropdown .badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
         }
         
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 2rem 0 0.5rem;
+            padding: 2rem 0 1rem;
             margin-top: 3rem;
         }
         
-        footer h5 {
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-section h5 {
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--accent-color);
+            margin-bottom: 1rem;
+            color: white;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-section h5 i {
+            color: var(--accent-color);
+        }
+        
+        .footer-section p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
         }
         
         footer a {
-            color: #ecf0f1;
+            color: var(--accent-color);
             text-decoration: none;
             transition: color 0.3s ease;
         }
         
         footer a:hover {
-            color: var(--accent-color);
-        }
-        
-        footer p {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            color: white;
+            text-decoration: underline;
         }
         
         .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1rem;
-            margin-top: 1rem;
+            padding-top: 1.5rem;
             text-align: center;
             font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .footer-bottom p {
+            margin: 0;
         }
         
         /* Cards */
@@ -176,29 +517,162 @@
         }
         
         /* Buttons */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border: none;
-            font-weight: 600;
+        .btn {
+            font-weight: 500;
             padding: 0.6rem 1.5rem;
-            transition: all 0.3s ease;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 31, 63, 0.3);
+            background: #0066c0;
+            color: white;
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #28b838;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67700;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #e63028;
+            color: white;
+        }
+        
+        .btn-info {
+            background: var(--info-color);
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #2fb8b8;
+            color: white;
         }
         
         .btn-secondary {
-            background: var(--accent-color);
-            border: none;
+            background: #6c757d;
             color: white;
-            font-weight: 600;
         }
         
         .btn-secondary:hover {
-            background: #2ab8b8;
-            transform: translateY(-2px);
+            background: #5a6268;
+            color: white;
+        }
+        
+        .btn-outline-primary {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-outline-secondary {
+            background: transparent;
+            color: #6c757d;
+            border: 2px solid #6c757d;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+        
+        .btn-outline-success {
+            background: transparent;
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+        
+        .btn-outline-success:hover {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-outline-warning {
+            background: transparent;
+            color: var(--warning-color);
+            border: 2px solid var(--warning-color);
+        }
+        
+        .btn-outline-warning:hover {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-outline-danger {
+            background: transparent;
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color);
+        }
+        
+        .btn-outline-danger:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-lg {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn i {
+            font-size: 1em;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
         }
         
         /* Badges */
@@ -326,29 +800,73 @@
             border-radius: 10px;
         }
         
-        /* Responsive */
+        /* Desktop navbar - horizontal layout */
+        .navbar-nav {
+            flex-direction: row !important;
+        }
+        
+        /* Responsive - Mobile First Approach */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                width: 100%;
+            }
+            
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+        
         @media (max-width: 768px) {
             .navbar-brand {
                 font-size: 1.2rem;
             }
             
+            .brand-name {
+                font-size: 1.1rem;
+            }
+            
+            .brand-tagline {
+                font-size: 0.65rem;
+            }
+            
             .nav-link {
                 margin: 5px 0;
-                padding: 0.5rem 0 !important;
+                padding: 0.75rem 1rem !important;
+                border-radius: 8px;
             }
             
-            .admin-btn {
+            .user-dropdown {
                 width: 100%;
-                margin-top: 0.5rem;
-                padding: 0.6rem 1rem;
+                justify-content: flex-start;
+                border-radius: 8px;
+                margin: 0.5rem 0;
             }
             
-            .dropdown-menu {
+            .login-btn {
                 width: 100%;
+                margin: 0.25rem 0;
+                padding: 0.75rem 1.25rem !important;
+                border-radius: 8px;
             }
             
-            .dropdown-item {
-                padding: 0.6rem 1rem;
+            .modern-dropdown {
+                width: 100%;
+                margin-top: 0;
+            }
+            
+            .user-info {
+                flex: 1;
+            }
+            
+            .navbar-nav {
+                padding: 1rem 0;
+            }
+            
+            .navbar-nav.ms-auto {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
             }
             
             .container {
@@ -522,21 +1040,38 @@
             }
             
             footer {
-                padding: 1.5rem 0 0.5rem;
+                padding: 1rem 0 0.5rem;
+                margin-top: 2rem;
             }
             
-            footer h5 {
-                font-size: 0.95rem;
+            .footer-content {
+                gap: 1rem;
+                padding-bottom: 0.75rem;
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+            
+            .footer-section h5 {
+                font-size: 0.9rem;
                 margin-bottom: 0.5rem;
+                justify-content: center;
             }
             
-            footer p {
+            .footer-section p {
                 font-size: 0.8rem;
+                line-height: 1.4;
+                margin-bottom: 0.25rem;
+            }
+            
+            .footer-section br {
+                display: none;
             }
             
             .footer-bottom {
                 padding-top: 0.75rem;
-                margin-top: 0.75rem;
                 font-size: 0.75rem;
             }
         }
@@ -545,75 +1080,385 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <!-- Modern Navbar -->
+    <nav class="navbar navbar-dark sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="40" height="40" style="margin-right: 10px;">
-                    <circle cx="100" cy="100" r="95" fill="white" stroke="white" stroke-width="2"/>
-                    <circle cx="100" cy="100" r="85" fill="#39CCCC" opacity="0.2"/>
-                    <g transform="translate(100, 100)">
-                        <path d="M -20 -15 L -5 -15 L -5 15 L -20 15 Z" fill="white" opacity="0.9"/>
-                        <path d="M 5 -15 L 20 -15 L 20 15 L 5 15 Z" fill="#39CCCC"/>
-                        <rect x="-5" y="-15" width="10" height="30" fill="white" opacity="0.7"/>
-                    </g>
-                </svg>
-                <span>HiTec Library</span>
+            <!-- Brand -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <div class="brand-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="45" height="45">
+                        <circle cx="100" cy="100" r="95" fill="white" stroke="white" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="85" fill="#39CCCC" opacity="0.2"/>
+                        <g transform="translate(100, 100)">
+                            <path d="M -20 -15 L -5 -15 L -5 15 L -20 15 Z" fill="white" opacity="0.9"/>
+                            <path d="M 5 -15 L 20 -15 L 20 15 L 5 15 Z" fill="#39CCCC"/>
+                            <rect x="-5" y="-15" width="10" height="30" fill="white" opacity="0.7"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">HiTec Library</span>
+                    <small class="brand-tagline">Knowledge Hub</small>
+                </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+            
+            <!-- Desktop Navigation - Hidden on Mobile -->
+            <div class="d-none d-lg-flex flex-grow-1 align-items-center">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-row">
+                    {% if session.get('admin_id') %}
+                    <!-- Admin Navigation -->
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="/">
-                            <i class="fas fa-home"></i> Home
+                        <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="/admin/dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="/about">
-                            <i class="fas fa-info-circle"></i> About
+                        <a class="nav-link {% if request.endpoint == 'admin_books' %}active{% endif %}" href="/admin/books">
+                            <i class="fas fa-book"></i>
+                            <span>Manage Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_students' %}active{% endif %}" href="/admin/students">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_loans' %}active{% endif %}" href="/admin/loans">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Issue/Return</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_rental_requests' %}active{% endif %}" href="/admin/rental-requests">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Requests</span>
+                            {% if session.get('pending_requests', 0) > 0 %}
+                            <span class="badge bg-danger ms-1">{{ session.get('pending_requests') }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_reports' %}active{% endif %}" href="/admin/reports">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    
+                    {% elif session.get('student_id') %}
+                    <!-- Student Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="/">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
-                            <i class="fas fa-book"></i> Books
+                            <i class="fas fa-book"></i>
+                            <span>Catalog</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_loans' %}active{% endif %}" href="/student/loans">
+                            <i class="fas fa-book-reader"></i>
+                            <span>Digital Library</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_rental_requests' %}active{% endif %}" href="/student/rental/requests">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>My Requests</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_dashboard' %}active{% endif %}" href="/student/dashboard">
+                            <i class="fas fa-user-circle"></i>
+                            <span>My Account</span>
+                        </a>
+                    </li>
+                    
+                    {% else %}
+                    <!-- Guest Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="/">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
+                            <i class="fas fa-book"></i>
+                            <span>Catalog</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="/about">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="/contact">
-                            <i class="fas fa-envelope"></i> Contact
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact</span>
                         </a>
                     </li>
-                    
-                    <!-- Admin Dropdown -->
+                    {% endif %}
+                </ul>
+                
+                <!-- User Section -->
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- Admin Section -->
+                    {% if session.get('admin_id') %}
                     <li class="nav-item dropdown">
-                        <button class="admin-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-cog"></i> Admin
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            {% if session.get('admin_id') %}
+                        <a class="nav-link dropdown-toggle user-dropdown" href="#" data-bs-toggle="dropdown">
+                            <div class="user-avatar bg-danger">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">{{ session.get('admin_username') }}</span>
+                                <small class="user-role">Administrator</small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end modern-dropdown">
+                            <li class="dropdown-header">
+                                <i class="fas fa-cog"></i> Settings
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item" href="/admin/dashboard">
-                                    <i class="fas fa-lock"></i> Dashboard
+                                <a class="dropdown-item" href="/admin/audit-logs">
+                                    <i class="fas fa-history"></i>
+                                    <span>Audit Logs</span>
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item" href="/admin/logout">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                <a class="dropdown-item text-danger" href="/admin/logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
                                 </a>
                             </li>
-                            {% else %}
-                            <li>
-                                <a class="dropdown-item" href="/admin/login">
-                                    <i class="fas fa-sign-in-alt"></i> Admin Login
-                                </a>
-                            </li>
-                            {% endif %}
                         </ul>
                     </li>
+                    
+                    <!-- Student Section -->
+                    {% elif session.get('student_id') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-dropdown" href="#" data-bs-toggle="dropdown">
+                            <div class="user-avatar bg-success">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">{{ session.get('student_name') }}</span>
+                                <small class="user-role">Student</small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end modern-dropdown">
+                            <li class="dropdown-header">
+                                <i class="fas fa-user"></i> My Account
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="/student/profile">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Profile Settings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/student/reservations">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span>My Reservations</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-item-text">
+                                <small class="text-muted">Card: {{ session.get('student_card') }}</small>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="/student/logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Guest Section -->
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link login-btn" href="/login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
+            </div>
+            
+            <!-- Mobile Toggle Button - Only visible on mobile -->
+            <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Mobile Offcanvas Menu -->
+            <div class="offcanvas offcanvas-end" data-bs-scroll="false" data-bs-backdrop="true" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="navbarOffcanvasLabel">
+                        <i class="fas fa-bars"></i> Menu
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav">
+                    {% if session.get('admin_id') %}
+                    <!-- Admin Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="/admin/dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_books' %}active{% endif %}" href="/admin/books">
+                            <i class="fas fa-book"></i>
+                            <span>Manage Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_students' %}active{% endif %}" href="/admin/students">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_loans' %}active{% endif %}" href="/admin/loans">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Issue/Return</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_rental_requests' %}active{% endif %}" href="/admin/rental-requests">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Requests</span>
+                            {% if session.get('pending_requests', 0) > 0 %}
+                            <span class="badge bg-danger ms-1">{{ session.get('pending_requests') }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'admin_reports' %}active{% endif %}" href="/admin/reports">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/audit-logs">
+                            <i class="fas fa-history"></i>
+                            <span>Audit Logs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/admin/logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    
+                    {% elif session.get('student_id') %}
+                    <!-- Student Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="/">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
+                            <i class="fas fa-book"></i>
+                            <span>Catalog</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_loans' %}active{% endif %}" href="/student/loans">
+                            <i class="fas fa-book-reader"></i>
+                            <span>Digital Library</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_rental_requests' %}active{% endif %}" href="/student/rental/requests">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>My Requests</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'student_dashboard' %}active{% endif %}" href="/student/dashboard">
+                            <i class="fas fa-user-circle"></i>
+                            <span>My Account</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student/profile">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Profile Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student/reservations">
+                            <i class="fas fa-bookmark"></i>
+                            <span>My Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/student/logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    
+                    {% else %}
+                    <!-- Guest Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="/">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'public_books' %}active{% endif %}" href="/books">
+                            <i class="fas fa-book"></i>
+                            <span>Catalog</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="/about">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>
+                    <li class="nav-item">
+                        <a class="nav-link login-btn" href="/login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="/contact">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact</span>
+                        </a>
+                    </li>
+                        </a>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -641,17 +1486,18 @@
     <!-- Footer -->
     <footer class="mt-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5><i class="fas fa-book"></i> Library</h5>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5><i class="fas fa-book"></i> HiTec Library</h5>
+                    <p>Your gateway to knowledge and academic excellence.</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="footer-section">
                     <h5><i class="fas fa-clock"></i> Hours</h5>
-                    <p class="small mb-0">Mon-Fri: 8:00 AM - 10:00 PM<br>Sat: 9:00 AM - 5:00 PM<br>Sun: Closed</p>
+                    <p>Mon-Fri: 8:00 AM - 10:00 PM<br>Sat: 9:00 AM - 5:00 PM<br>Sun: Closed</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="footer-section">
                     <h5><i class="fas fa-phone"></i> Contact</h5>
-                    <p class="small mb-0">Phone: +92-51-9048-5000<br>Email: <a href="mailto:library@hitec.edu.pk">library@hitec.edu.pk</a></p>
+                    <p>Phone: +92-51-9048-5000<br>Email: <a href="mailto:library@hitec.edu.pk">library@hitec.edu.pk</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -661,7 +1507,7 @@
     </footer>
     
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

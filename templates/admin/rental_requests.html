@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Rental Requests - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .requests-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+    }
+    
+    .request-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .request-card:hover {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .request-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .request-body {
+        padding: 1.5rem;
+    }
+    
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .status-pending {
+        background-color: #FF851B;
+        color: white;
+    }
+    
+    .status-approved {
+        background-color: #2ECC40;
+        color: white;
+    }
+    
+    .status-rejected {
+        background-color: #FF4136;
+        color: white;
+    }
+    
+    .student-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .book-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .info-row {
+        margin-bottom: 0.5rem;
+    }
+    
+    .info-label {
+        color: #666;
+        font-size: 0.85rem;
+    }
+    
+    .info-value {
+        color: var(--dark-text);
+        font-weight: 500;
+    }
+    
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+    }
+    
+    .nav-tabs {
+        border-bottom: 2px solid #ddd;
+        margin-bottom: 1.5rem;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #666;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+        background: none;
+    }
+    
+    @media (max-width: 768px) {
+        .requests-container {
+            margin: 1rem auto;
+        }
+        
+        .request-card {
+            margin-bottom: 0.75rem;
+        }
+        
+        .request-header {
+            padding: 0.75rem 1rem;
+        }
+        
+        .request-body {
+            padding: 1rem;
+        }
+        
+        .student-info, .book-info {
+            padding: 0.75rem;
+        }
+        
+        .info-value {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="requests-container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="text-primary mb-2">
+                    <i class="fas fa-clipboard-list"></i> Rental Requests
+                </h1>
+                <p class="text-muted">Review and approve book rental requests from students</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/admin/dashboard" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'pending' %}active{% endif %}" href="?status=pending">
+                    <i class="fas fa-clock"></i> Pending <span class="badge bg-primary">{{ requests.total if status == 'pending' else '' }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'approved' %}active{% endif %}" href="?status=approved">
+                    <i class="fas fa-check-circle"></i> Approved <span class="badge bg-success">{{ requests.total if status == 'approved' else '' }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'rejected' %}active{% endif %}" href="?status=rejected">
+                    <i class="fas fa-times-circle"></i> Rejected <span class="badge bg-danger">{{ requests.total if status == 'rejected' else '' }}</span>
+                </a>
+            </li>
+        </ul>
+        
+        {% if requests.items %}
+        {% for request in requests.items %}
+        <div class="request-card">
+            <div class="request-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ request.book.title }}</h5>
+                        <p class="mb-0 text-white-50">{{ request.book.author }}</p>
+                    </div>
+                    <span class="status-badge status-{{ request.status }}">
+                        <i class="fas fa-circle"></i> {{ request.status|title }}
+                    </span>
+                </div>
+            </div>
+            <div class="request-body">
+                <div class="student-info">
+                    <h6 class="text-primary mb-2"><i class="fas fa-user-graduate"></i> Student Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <span class="info-label">Name:</span>
+                                <span class="info-value">{{ request.student.name }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Roll Number:</span>
+                                <span class="info-value">{{ request.student.roll_number }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Department:</span>
+                                <span class="info-value">{{ request.student.department }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <span class="info-label">Library Card:</span>
+                                <span class="info-value">{{ request.student.library_card_number }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value">{{ request.student.email }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Card Status:</span>
+                                <span class="info-value">
+                                    <span class="badge {% if request.student.card_status == 'active' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ request.student.card_status|title }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="book-info">
+                    <h6 class="text-primary mb-2"><i class="fas fa-book"></i> Book Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <span class="info-label">Title:</span>
+                                <span class="info-value">{{ request.book.title }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Genre:</span>
+                                <span class="info-value">{{ request.book.genre }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-row">
+                                <span class="info-label">ISBN:</span>
+                                <span class="info-value">{{ request.book.isbn }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Available Copies:</span>
+                                <span class="info-value">{{ request.book.available_copies }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Request Date:</span>
+                    <span class="info-value">{{ request.request_date.strftime('%d %b %Y %H:%M') }}</span>
+                </div>
+                
+                {% if request.notes %}
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-comment"></i>
+                    <strong>Notes:</strong> {{ request.notes }}
+                </div>
+                {% endif %}
+                
+                <div class="mt-4 d-flex gap-2 flex-wrap">
+                    {% if request.status == 'pending' %}
+                    <form method="POST" action="/admin/rental-requests/{{ request.id }}/approve">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Approve this rental request?')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                    </form>
+                    <form method="POST" action="/admin/rental-requests/{{ request.id }}/reject">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Reject this rental request?')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </form>
+                    {% elif request.status == 'approved' %}
+                    <span class="badge bg-success">
+                        <i class="fas fa-check"></i> Approved by {{ request.admin.username if request.admin else 'Admin' }}
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger">
+                        <i class="fas fa-times"></i> Rejected by {{ request.admin.username if request.admin else 'Admin' }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <!-- Pagination -->
+        {% if requests.pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if requests.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ requests.prev_num }}&status={{ status }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in requests.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num == requests.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_num }}&status={{ status }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if requests.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ requests.next_num }}&status={{ status }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No rental requests</h3>
+            <p class="text-muted">Students will appear here when they request to rent books</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

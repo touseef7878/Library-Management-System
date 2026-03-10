@@ -56,6 +56,11 @@ database/library_backup*.db
 *.sqlite
 *.sqlite3
 
+# Book Content (large files)
+static/books/*.txt
+static/books/*.pdf
+static/books/*.epub
+
 # Logs
 *.log
 logs/
@@ -100,7 +105,8 @@ instance/
 dmypy.json
 *.pyo
 
-# Project specific
+# Project specific - ignore test/utility scripts
 update_coordinates.py
 test_functionality.py
 test_fine_system.py
+fetch_*.py

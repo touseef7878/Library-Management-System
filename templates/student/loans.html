@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}My Loans - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .loans-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+    
+    .loan-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .loan-card:hover {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .loan-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .loan-body {
+        padding: 1.5rem;
+    }
+    
+    .book-title {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+    
+    .book-author {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .info-row {
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-label {
+        color: #666;
+        font-size: 0.85rem;
+    }
+    
+    .info-value {
+        color: var(--dark-text);
+        font-weight: 500;
+    }
+    
+    .fine-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .fine-none {
+        background-color: #2ECC40;
+        color: white;
+    }
+    
+    .fine-pending {
+        background-color: #FF851B;
+        color: white;
+    }
+    
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+    }
+    
+    @media (max-width: 768px) {
+        .loans-container {
+            margin: 1rem auto;
+        }
+        
+        .loan-card {
+            margin-bottom: 0.75rem;
+        }
+        
+        .loan-header {
+            padding: 0.75rem 1rem;
+        }
+        
+        .loan-body {
+            padding: 1rem;
+        }
+        
+        .book-title {
+            font-size: 1rem;
+        }
+        
+        .info-value {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="loans-container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="text-primary mb-2">
+                    <i class="fas fa-book-open"></i> My Active Loans
+                </h1>
+                <p class="text-muted">Books you have borrowed and can read online</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/student/dashboard" class="btn btn-outline-primary">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </div>
+        </div>
+        
+        {% if loans %}
+        {% for loan in loans %}
+        <div class="loan-card">
+            <div class="loan-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ loan.book.title }}</h5>
+                        <p class="mb-0 text-white-50">{{ loan.book.author }}</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-calendar"></i> Due: {{ loan.due_date.strftime('%d %b %Y') }}
+                            </span>
+                        </div>
+                        {% if loan.is_overdue() %}
+                        <span class="badge bg-danger">
+                            <i class="fas fa-clock"></i> Overdue
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="loan-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-row">
+                            <span class="info-label">Loan Date:</span>
+                            <span class="info-value">{{ loan.loan_date.strftime('%d %b %Y') }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Days Remaining:</span>
+                            <span class="info-value">{{ loan.days_remaining() }} days</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-row">
+                            <span class="info-label">Fine Amount:</span>
+                            <span class="fine-badge {% if loan.fine_amount > 0 %}fine-pending{% else %}fine-none{% endif %}">
+                                PKR {{ "%.2f"|format(loan.fine_amount) }}
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">ISBN:</span>
+                            <span class="info-value">{{ loan.book.isbn }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-flex gap-2 flex-wrap">
+                    <a href="/student/loan/{{ loan.id }}/read" class="btn btn-primary">
+                        <i class="fas fa-book-reader"></i> Read Online
+                    </a>
+                    <form method="POST" action="/student/loan/{{ loan.id }}/return">
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to return this book?')">
+                            <i class="fas fa-undo"></i> Return Book
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-book-open fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No active loans</h3>
+            <p class="text-muted">You haven't borrowed any books yet</p>
+            <a href="/books" class="btn btn-primary mt-3">
+                <i class="fas fa-search"></i> Browse Books
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

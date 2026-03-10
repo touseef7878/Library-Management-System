@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Login - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 900px;
+        margin: 3rem auto;
+    }
+    
+    .login-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .login-row {
+        display: flex;
+        min-height: 500px;
+    }
+    
+    .login-left {
+        flex: 1;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .login-left i {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+    }
+    
+    .login-left h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .login-left p {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+    
+    .login-features {
+        text-align: left;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .login-features div {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+    
+    .login-features i {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+    
+    .login-features span {
+        font-size: 0.9rem;
+    }
+    
+    .login-right {
+        flex: 1;
+        background: white;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .login-right h3 {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-right .subtitle {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 116, 217, 0.15);
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        border-radius: 8px;
+        padding: 0.875rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 31, 63, 0.3);
+    }
+    
+    .login-help {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .login-help p {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    @media (max-width: 768px) {
+        .login-container {
+            margin: 2rem 1rem;
+        }
+        
+        .login-row {
+            flex-direction: column;
+            min-height: auto;
+        }
+        
+        .login-left {
+            padding: 2rem;
+        }
+        
+        .login-left i {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .login-left h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-left p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .login-features {
+            display: none;
+        }
+        
+        .login-right {
+            padding: 2rem;
+        }
+        
+        .login-right h3 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-row">
+                <!-- Left Side - Branding -->
+                <div class="login-left">
+                    <i class="fas fa-book-reader"></i>
+                    <h2>HiTec Library</h2>
+                    <p>Your Gateway to Knowledge</p>
+                    
+                    <div class="login-features">
+                        <div>
+                            <i class="fas fa-book"></i>
+                            <span>Access thousands of books</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-laptop"></i>
+                            <span>Read online anytime</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock"></i>
+                            <span>24/7 digital access</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Login Form -->
+                <div class="login-right">
+                    <h3>Welcome Back</h3>
+                    <p class="subtitle">Login to access your library account</p>
+                    
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user"></i> Username / Library Card
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" required placeholder="Enter username or library card">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-key"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" required placeholder="Enter password">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-login w-100">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                    
+                    <div class="login-help">
+                        <p>Need help accessing your account?</p>
+                        <a href="/contact" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-envelope"></i> Contact Library
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

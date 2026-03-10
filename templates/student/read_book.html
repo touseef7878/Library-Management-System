@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Read {{ loan.book.title }} - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .read-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+    
+    .book-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .book-reader {
+        background: white;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 3rem;
+        min-height: 600px;
+        font-family: 'Georgia', serif;
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    
+    .book-reader h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+        text-align: center;
+    }
+    
+    .book-reader .author {
+        text-align: center;
+        font-style: italic;
+        color: #666;
+        margin-bottom: 3rem;
+        font-size: 1.2rem;
+    }
+    
+    .book-reader h2 {
+        font-size: 1.8rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+    }
+    
+    .book-reader p {
+        margin-bottom: 1.5rem;
+        text-align: justify;
+    }
+    
+    .reading-controls {
+        position: sticky;
+        top: 80px;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+    }
+    
+    .font-controls button {
+        margin: 0 0.25rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .font-controls button:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
+    @media (max-width: 768px) {
+        .read-container {
+            margin: 1rem;
+        }
+        
+        .book-header {
+            padding: 1.5rem;
+        }
+        
+        .book-header h1 {
+            font-size: 1.3rem;
+        }
+        
+        .book-reader {
+            padding: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .book-reader h1 {
+            font-size: 1.8rem;
+        }
+        
+        .book-reader .author {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .book-reader h2 {
+            font-size: 1.4rem;
+        }
+        
+        .reading-controls {
+            flex-direction: column;
+            gap: 0.5rem;
+            top: 60px;
+        }
+        
+        .font-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .font-controls button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="read-container">
+        <div class="book-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-2" style="font-size: 1.8rem;">{{ loan.book.title }}</h1>
+                    <p class="mb-0" style="opacity: 0.9;">by {{ loan.book.author }}</p>
+                </div>
+                <a href="/student/loans" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+        
+        <div class="reading-controls">
+            <div class="font-controls">
+                <button onclick="changeFontSize(-1)" title="Decrease font size">
+                    <i class="fas fa-minus"></i> A
+                </button>
+                <button onclick="changeFontSize(1)" title="Increase font size">
+                    <i class="fas fa-plus"></i> A
+                </button>
+                <button onclick="toggleTheme()" title="Toggle dark mode">
+                    <i class="fas fa-adjust"></i>
+                </button>
+            </div>
+            <div class="text-muted">
+                <i class="fas fa-book-open"></i> Sample Chapter
+            </div>
+        </div>
+        
+        <div class="book-reader" id="bookContent">
+            {% if book_content %}
+                <div style="white-space: pre-wrap;">{{ book_content }}</div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-book fa-4x text-muted mb-3"></i>
+                    <p class="text-muted">No online version available for this book</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+let currentFontSize = 1.1;
+let isDarkMode = false;
+
+function changeFontSize(delta) {
+    currentFontSize += delta * 0.1;
+    if (currentFontSize < 0.8) currentFontSize = 0.8;
+    if (currentFontSize > 1.6) currentFontSize = 1.6;
+    document.getElementById('bookContent').style.fontSize = currentFontSize + 'rem';
+}
+
+function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    const content = document.getElementById('bookContent');
+    if (isDarkMode) {
+        content.style.background = '#1a1a1a';
+        content.style.color = '#e0e0e0';
+    } else {
+        content.style.background = 'white';
+        content.style.color = '#333';
+    }
+}
+</script>
+{% endblock %}

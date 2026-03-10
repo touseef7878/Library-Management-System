@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Reports & Analytics - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-primary mb-2">
+                <i class="fas fa-chart-line"></i> Reports & Analytics
+            </h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <a href="?days=7" class="btn btn-outline-primary {% if days == 7 %}active{% endif %}">7 Days</a>
+                <a href="?days=30" class="btn btn-outline-primary {% if days == 30 %}active{% endif %}">30 Days</a>
+                <a href="?days=90" class="btn btn-outline-primary {% if days == 90 %}active{% endif %}">90 Days</a>
+                <a href="?days=365" class="btn btn-outline-primary {% if days == 365 %}active{% endif %}">1 Year</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Loans</h6>
+                    <h2 class="text-primary">{{ total_loans }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Returned</h6>
+                    <h2 class="text-success">{{ returned_loans }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Overdue</h6>
+                    <h2 class="text-danger">{{ overdue_loans }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Fines Collected</h6>
+                    <h2 class="text-warning">PKR {{ "%.2f"|format(total_fines_collected) }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popular Books -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-star"></i> Most Popular Books</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Loans</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for book, count in popular_books %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ book.title }}</strong><br>
+                                        <small class="text-muted">{{ book.author }}</small>
+                                    </td>
+                                    <td><span class="badge bg-primary">{{ count }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-book"></i> Popular Genres</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Genre</th>
+                                    <th>Loans</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for genre, count in popular_genres %}
+                                <tr>
+                                    <td><strong>{{ genre }}</strong></td>
+                                    <td><span class="badge bg-secondary">{{ count }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Department Statistics -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="fas fa-university"></i> Department Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Total Loans</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dept, count in dept_stats %}
+                                <tr>
+                                    <td><strong>{{ dept }}</strong></td>
+                                    <td><span class="badge bg-info">{{ count }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

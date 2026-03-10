@@ -230,10 +230,65 @@
                         <span class="text-success">No Fines</span>
                         {% endif %}
                     </p>
+                    
+                    {% if student.total_fines > 0 %}
+                    <button class="btn btn-warning btn-sm w-100 mt-2" data-bs-toggle="modal" data-bs-target="#payFineModal">
+                        <i class="fas fa-money-bill"></i> Record Payment
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <button class="btn btn-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">
+                        <i class="fas fa-key"></i> Reset Password
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Fine Payment History -->
+    {% if fine_payments %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-receipt"></i> Fine Payment History
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Received By</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in fine_payments %}
+                                <tr>
+                                    <td>{{ payment.payment_date.strftime('%d %b %Y %H:%M') }}</td>
+                                    <td><strong>PKR {{ "%.2f"|format(payment.amount) }}</strong></td>
+                                    <td><span class="badge bg-info">{{ payment.payment_method|title }}</span></td>
+                                    <td>{{ payment.admin.username if payment.admin else '-' }}</td>
+                                    <td>{{ payment.notes or '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     
     <!-- Loans History -->
     <div class="row">
@@ -297,6 +352,74 @@
                     {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pay Fine Modal -->
+<div class="modal fade" id="payFineModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-money-bill"></i> Record Fine Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/admin/students/{{ student.id }}/pay-fine">
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Outstanding Fines:</strong> PKR {{ "%.2f"|format(student.total_fines) }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Payment Amount (PKR) *</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0.01" max="{{ student.total_fines }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="payment_method" class="form-label">Payment Method *</label>
+                        <select class="form-select" id="payment_method" name="payment_method" required>
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="online">Online Transfer</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Record Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-key"></i> Reset Student Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/admin/students/{{ student.id }}/reset-password">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        This will reset the student's password to their roll number: <strong>{{ student.roll_number }}</strong>
+                    </div>
+                    <p>Are you sure you want to reset the password for <strong>{{ student.name }}</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Reset Password</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

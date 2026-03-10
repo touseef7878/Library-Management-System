@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Logs - HiTec University Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="text-primary mb-2">
+                <i class="fas fa-history"></i> Audit Logs
+            </h1>
+            <p class="text-muted">Track all system activities and user actions</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/admin/dashboard" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">User Type</label>
+                    <select name="user_type" class="form-select">
+                        <option value="">All</option>
+                        <option value="admin" {% if user_type == 'admin' %}selected{% endif %}>Admin</option>
+                        <option value="student" {% if user_type == 'student' %}selected{% endif %}>Student</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Action</label>
+                    <input type="text" name="action" class="form-control" value="{{ action }}" placeholder="Search action...">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Logs Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Entity</th>
+                            <th>Details</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs.items %}
+                        <tr>
+                            <td>
+                                <small>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            </td>
+                            <td>
+                                <span class="badge {% if log.user_type == 'admin' %}bg-danger{% else %}bg-info{% endif %}">
+                                    {{ log.user_type|title }}
+                                </span>
+                                <small>ID: {{ log.user_id }}</small>
+                            </td>
+                            <td><strong>{{ log.action }}</strong></td>
+                            <td>
+                                {% if log.entity_type %}
+                                <small class="text-muted">{{ log.entity_type }} #{{ log.entity_id }}</small>
+                                {% else %}
+                                <small class="text-muted">-</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if log.details %}
+                                <small>{{ log.details[:50] }}{% if log.details|length > 50 %}...{% endif %}</small>
+                                {% else %}
+                                <small class="text-muted">-</small>
+                                {% endif %}
+                            </td>
+                            <td><small>{{ log.ip_address or '-' }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if logs.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if logs.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ logs.prev_num }}&user_type={{ user_type }}&action={{ action }}">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in logs.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == logs.page %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_num }}&user_type={{ user_type }}&action={{ action }}">{{ page_num }}</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if logs.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ logs.next_num }}&user_type={{ user_type }}&action={{ action }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

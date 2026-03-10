@@ -7,12 +7,17 @@ Cleans the database and populates it with fresh data:
 - Reviews from students
 """
 
-from app import app, db, Admin, Student, Book, Review
-from datetime import datetime, timedelta
+from app import app, db, Admin, Student, Book, Review, BookRentalRequest, OnlineBook
+from datetime import datetime, timedelta, timezone
 import random
 import string
 import requests
 import time
+import os
+
+def get_utc_now():
+    """Get current UTC datetime (timezone-aware)"""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 # Department codes
 DEPARTMENTS = {
@@ -272,17 +277,20 @@ with app.app_context():
             department = random.choice(list(DEPARTMENTS.keys()))
             dept_code = DEPARTMENTS[department]
             batch_year = random.randint(20, 24)
+            roll_number = generate_roll_number(dept_code, batch_year, used_rolls)
             
             student = Student(
                 name=name,
                 email=f"student{i+1}@hitec.edu.pk",
-                roll_number=generate_roll_number(dept_code, batch_year, used_rolls),
+                roll_number=roll_number,
                 phone=f"+92-{random.randint(300, 345)}-{random.randint(1000000, 9999999)}",
                 department=department,
                 semester=random.randint(1, 8),
                 library_card_number=generate_library_card(used_cards),
                 card_status='active'
             )
+            # Set default password as roll number
+            student.set_password(roll_number)
             db.session.add(student)
             
             if (i + 1) % 50 == 0:
@@ -290,7 +298,7 @@ with app.app_context():
                 print(f"   Added {i + 1}/300 students")
         
         db.session.commit()
-        print("   ✓ 300 students created")
+        print("   ✓ 300 students created with default passwords (roll number)")
         
         # Seed Books - Fetch real books from Open Library API
         print("\n5. Creating 50 real books from Open Library API...")
@@ -353,6 +361,61 @@ with app.app_context():
         db.session.commit()
         print(f"   ✓ {book_count} real books created")
         
+        # Create online books directory
+        os.makedirs('static/books', exist_ok=True)
+        
+        # Seed Online Books - Create sample PDF files for online reading
+        print("\n6. Creating online books for reading...")
+        online_books_count = 0
+        
+        # Create sample online books for first 10 books
+        sample_books = Book.query.limit(10).all()
+        
+        for book in sample_books:
+            # Create a simple text file as sample content
+            filename = f"book_{book.id}_sample.txt"
+            file_path = os.path.join('static', 'books', filename)
+            
+            # Create sample content
+            content = f"""{book.title}
+by {book.author}
+
+This is a sample chapter from the book "{book.title}".
+This is a demonstration of the online reading feature.
+
+Chapter 1: Introduction
+
+Welcome to this sample chapter. In a real library system,
+this would contain the actual book content in PDF format.
+
+The library management system allows students to:
+- Request book rentals
+- View their rental requests
+- Read books online after approval
+- Return books when finished
+
+Thank you for using the HiTec University Library System!
+"""
+            
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            # Create online book record
+            online_book = OnlineBook(
+                book_id=book.id,
+                file_path=file_path,
+                file_type='txt',
+                created_by=1  # Admin ID
+            )
+            db.session.add(online_book)
+            online_books_count += 1
+        
+        db.session.commit()
+        print(f"   ✓ {online_books_count} online books created")
+        
+        # Seed Reviews
+        print("\n7. Creating reviews...")
+        
         # Seed Reviews
         print("\n6. Creating reviews...")
         students = Student.query.all()
@@ -369,7 +432,7 @@ with app.app_context():
                     student_id=student.id,
                     rating=random.randint(3, 5),
                     comment=random.choice(REVIEW_COMMENTS),
-                    created_at=datetime.utcnow() - timedelta(days=random.randint(1, 365))
+                    created_at=get_utc_now() - timedelta(days=random.randint(1, 365))
                 )
                 db.session.add(review)
                 reviews_added += 1

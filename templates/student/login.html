@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Student Login - HiTec University Library{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 5rem auto;
+    }
+    
+    .login-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .login-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        border-radius: 12px 12px 0 0;
+        text-align: center;
+    }
+    
+    .login-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-text);
+    }
+    
+    .form-control {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+    
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(0, 116, 217, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 31, 63, 0.3);
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    @media (max-width: 576px) {
+        .login-container {
+            margin: 2rem auto;
+        }
+        
+        .login-card {
+            border-radius: 8px;
+        }
+        
+        .login-header {
+            padding: 1.5rem;
+        }
+        
+        .login-header i {
+            font-size: 2.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-graduate"></i>
+                <h2 class="mb-0">Student Login</h2>
+                <p class="mb-0">HiTec University Library</p>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Student Library Card Number:</strong><br>
+                    <code class="bg-white p-2 rounded">{{ session.get('student_card', 'Not logged in') }}</code>
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="library_card" class="form-label">
+                            <i class="fas fa-id-card"></i> Library Card Number
+                        </label>
+                        <input type="text" class="form-control" id="library_card" name="library_card" required placeholder="LIB123456">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-key"></i> Password
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-2">Don't have a library card?</p>
+                    <a href="/contact" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-info-circle"></i> Contact Library
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
