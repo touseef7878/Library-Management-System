@@ -1,14 +1,6 @@
 # HITEC University Taxila Library Management System
 
-A modern, full-featured library management system built with Flask, featuring online book reading, rental requests, automatic fine calculation, and responsive design for both desktop and mobile.
-
-## 🎥 Video Demo
-
-Watch the full walkthrough of the system in action:
-
-https://github.com/user-attachments/assets/demo-video.mp4
-
-> **Note:** Place your video file at: `docs/demo-video.mp4` or upload to GitHub and replace the URL above with the actual GitHub video URL.
+A modern, full-featured library management system built with Flask, featuring online book reading, rental requests, automatic fine calculation, and responsive design for both desktop and mobile. 
 
 ## ✨ Features
 
